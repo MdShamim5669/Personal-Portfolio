@@ -1,0 +1,152 @@
+{
+  "profile": {
+    "fullName": "Md. Samim",
+    "title": "AI & Backend Engineer",
+    "email": "tamjidulislamsamim@gmail.com",
+    "phone": "+880 1743597989",
+    "location": "Dhaka, Bangladesh",
+    "university": "Daffodil International University",
+    "degree": "Bachelor of Science in Computer Science & Engineering",
+    "cgpa": 3.55,
+    "graduationYear": "2022 – 2026",
+    "summary": "Aspiring AI and Backend Engineer focused on building scalable full-stack applications using Next.js and Node.js with strong emphasis on AI integration, prompt engineering, and workflow automation. Experienced in applying machine learning techniques and AI-assisted development to improve system efficiency and delivery speed. Also skilled in AI-driven content creation, including end-to-end course development and publishing on Udemy using tools like Claude, Gamma, and HeyGen.",
+    "linkedinUrl": "https://linkedin.com/in/md-samim",
+    "githubUrl": "https://github.com/samim",
+    "coursesCovered": [
+      "Data Structures",
+      "Algorithms",
+      "Database Systems",
+      "Software Engineering",
+      "Artificial Intelligence",
+      "Machine Learning"
+    ]
+  },
+  "skills": [
+    { "name": "Python", "category": "LANGUAGES", "proficiency": 90, "iconName": "python" },
+    { "name": "JavaScript", "category": "LANGUAGES", "proficiency": 92, "iconName": "javascript" },
+    { "name": "TypeScript", "category": "LANGUAGES", "proficiency": 88, "iconName": "typescript" },
+    { "name": "C", "category": "LANGUAGES", "proficiency": 80, "iconName": "c" },
+    { "name": "C++", "category": "LANGUAGES", "proficiency": 82, "iconName": "cpp" },
+    { "name": "React.js", "category": "FRONTEND", "proficiency": 92, "iconName": "react" },
+    { "name": "Next.js", "category": "FRONTEND", "proficiency": 88, "iconName": "nextjs" },
+    { "name": "HTML5", "category": "FRONTEND", "proficiency": 95, "iconName": "html5" },
+    { "name": "CSS3", "category": "FRONTEND", "proficiency": 90, "iconName": "css3" },
+    { "name": "Tailwind CSS", "category": "FRONTEND", "proficiency": 94, "iconName": "tailwindcss" },
+    { "name": "Node.js", "category": "BACKEND", "proficiency": 90, "iconName": "nodejs" },
+    { "name": "Express.js", "category": "BACKEND", "proficiency": 92, "iconName": "express" },
+    { "name": "REST APIs", "category": "BACKEND", "proficiency": 95, "iconName": "restapi" },
+    { "name": "MongoDB", "category": "DATABASES", "proficiency": 86, "iconName": "mongodb" },
+    { "name": "PostgreSQL", "category": "DATABASES", "proficiency": 88, "iconName": "postgresql" },
+    { "name": "Firebase", "category": "DATABASES", "proficiency": 85, "iconName": "firebase" },
+    { "name": "Prisma ORM", "category": "DATABASES", "proficiency": 90, "iconName": "prisma" },
+    { "name": "Random Forest", "category": "ML_AI", "proficiency": 88, "iconName": "brain" },
+    { "name": "XGBoost", "category": "ML_AI", "proficiency": 84, "iconName": "cpu" },
+    { "name": "LightGBM", "category": "ML_AI", "proficiency": 82, "iconName": "cpu" },
+    { "name": "SVM", "category": "ML_AI", "proficiency": 80, "iconName": "sparkles" },
+    { "name": "Logistic Regression", "category": "ML_AI", "proficiency": 85, "iconName": "chart" },
+    { "name": "Naive Bayes", "category": "ML_AI", "proficiency": 80, "iconName": "chart" },
+    { "name": "SMOTE", "category": "ML_AI", "proficiency": 86, "iconName": "layers" },
+    { "name": "Git", "category": "TOOLS", "proficiency": 90, "iconName": "git" },
+    { "name": "GitHub", "category": "TOOLS", "proficiency": 92, "iconName": "github" },
+    { "name": "Docker", "category": "TOOLS", "proficiency": 80, "iconName": "docker" },
+    { "name": "VS Code", "category": "TOOLS", "proficiency": 95, "iconName": "vscode" },
+    { "name": "Google Colab", "category": "TOOLS", "proficiency": 88, "iconName": "colab" },
+    { "name": "ChatGPT", "category": "AI_TOOLS", "proficiency": 95, "iconName": "bot" },
+    { "name": "Claude", "category": "AI_TOOLS", "proficiency": 95, "iconName": "bot" },
+    { "name": "Gemini", "category": "AI_TOOLS", "proficiency": 90, "iconName": "bot" },
+    { "name": "Gamma", "category": "AI_TOOLS", "proficiency": 88, "iconName": "presentation" },
+    { "name": "HeyGen", "category": "AI_TOOLS", "proficiency": 85, "iconName": "video" },
+    { "name": "Cursor AI", "category": "AI_TOOLS", "proficiency": 92, "iconName": "code" },
+    { "name": "Google AI Studio", "category": "AI_TOOLS", "proficiency": 90, "iconName": "sparkles" }
+  ],
+  "thesis": {
+    "title": "Social Media Influence on Youth Opinion Change in Bangladesh",
+    "accuracy": 84.4,
+    "modelName": "Optimized Random Forest",
+    "datasetSize": 317,
+    "techStack": ["Python", "Scikit-learn", "Pandas", "NumPy", "Matplotlib", "Flask"],
+    "summary": "Designed a machine learning pipeline for opinion change prediction using SMOTE and feature engineering. Achieved 84.4% accuracy with an optimized Random Forest model on 317 survey responses.",
+    "githubUrl": "https://github.com/samim/thesis-social-media-influence"
+  },
+  "projects": [
+    {
+      "title": "SaFus Restaurant",
+      "tagline": "FullStack Restaurant & Order Management Platform",
+      "description": "Designed and developed a full-stack restaurant platform featuring dual payment gateways (Stripe & SSLCommerz), online table reservations, dynamic order management, and secure JWT authentication with Resend OTP verification, centralized API handling, and role-based admin dashboard features.",
+      "techStack": ["MongoDB", "Express.js", "React.js", "Node.js", "TypeScript", "Tailwind CSS", "JWT", "Stripe API", "SSLCommerz"],
+      "liveDemoUrl": "https://safus-restaurant.example.com",
+      "clientGithubUrl": "https://github.com/samim/safus-restaurant-client",
+      "serverGithubUrl": "https://github.com/samim/safus-restaurant-server",
+      "isFeatured": true
+    },
+    {
+      "title": "ParCelGo",
+      "tagline": "Full-Stack Parcel Delivery & Logistics Platform",
+      "description": "Designed and developed an end-to-end courier and parcel delivery platform with automated parcel booking, fare calculation, real-time tracking using Google Maps API, and role-based access control (User, Rider, Admin) featuring interactive dashboards and TanStack Query data caching.",
+      "techStack": ["MongoDB", "Express.js", "React.js", "Node.js", "TypeScript", "Tailwind CSS", "Google Maps API", "TanStack Query", "JWT"],
+      "liveDemoUrl": "https://parcelgo.example.com",
+      "clientGithubUrl": "https://github.com/samim/parcelgo-client",
+      "serverGithubUrl": "https://github.com/samim/parcelgo-server",
+      "isFeatured": true
+    }
+  ],
+  "experience": [
+    {
+      "role": "AI Content Development Intern",
+      "company": "ALGORIZIN",
+      "startDate": "Feb 2026",
+      "endDate": "June 2026",
+      "description": "Designed AI-powered learning content using Claude, ChatGPT, Gamma, and HeyGen. Leveraged prompt engineering and AI automation to improve course development workflows.",
+      "highlights": [
+        "Designed AI-powered learning content using Claude, ChatGPT, Gamma, and HeyGen.",
+        "Leveraged prompt engineering and AI automation to improve course development workflows.",
+        "Created and published 5 comprehensive technical courses on Udemy."
+      ]
+    }
+  ],
+  "courses": [
+    {
+      "title": "Salary Negotiation for Immigrants: H-1B, Green Card & U.S.",
+      "subtitle": "Use market data, AI tools, and proven negotiation scripts to increase compensation.",
+      "platform": "Udemy",
+      "creatorRole": "AI Content Developer at ALGORIZIN",
+      "courseUrl": "https://udemy.com/course/salary-negotiation-immigrants"
+    },
+    {
+      "title": "Python for AI Masterclass in 5 Days",
+      "subtitle": "Master Python, NumPy, PyTorch & LLM APIs — Build and Deploy a Real AI App.",
+      "platform": "Udemy",
+      "creatorRole": "AI Content Developer at ALGORIZIN",
+      "courseUrl": "https://udemy.com/course/python-ai-masterclass"
+    },
+    {
+      "title": "AI for Digital Marketing Strategy & Automation",
+      "subtitle": "Use AI tools for SEO, content, ads, analytics, and marketing automation.",
+      "platform": "Udemy",
+      "creatorRole": "AI Content Developer at ALGORIZIN",
+      "courseUrl": "https://udemy.com/course/ai-digital-marketing-strategy"
+    },
+    {
+      "title": "7 Days Claude Bootcamp: The Prompt Engineering Blueprint",
+      "subtitle": "Step-by-step prompt engineering system built specifically for Claude.",
+      "platform": "Udemy",
+      "creatorRole": "AI Content Developer at ALGORIZIN",
+      "courseUrl": "https://udemy.com/course/7-days-claude-bootcamp"
+    },
+    {
+      "title": "AI Agents: From Foundations to Enterprise Systems",
+      "subtitle": "How AI agents and autonomous teams are reshaping leadership and strategy.",
+      "platform": "Udemy",
+      "creatorRole": "AI Content Developer at ALGORIZIN",
+      "courseUrl": "https://udemy.com/course/ai-agents-enterprise-systems"
+    }
+  ],
+  "references": [
+    {
+      "name": "Mr. Md. Sazzadur Ahamed",
+      "designation": "Assistant Professor",
+      "institution": "Daffodil International University",
+      "email": "sazzad.cse@diu.edu.bd"
+    }
+  ]
+}
