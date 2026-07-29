@@ -13,6 +13,105 @@ import forestHouseVid from '../../../Docs/Banner_Bg/small-house-in-forest.960x54
 import flowerFieldVid from '../../../Docs/Banner_Bg/spring-flower-field.960x540.mp4';
 import springMeadowVid from '../../../Docs/Banner_Bg/spring-meadow.960x540.mp4';
 
+// 🌸 Animated Falling Sakura Petal Rain Effect for Cherry Blossom Background
+const SakuraPetalRain = () => {
+  const petals = Array.from({ length: 35 });
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+      {petals.map((_, i) => {
+        const size = 12 + (i % 5) * 4;
+        const left = (i * 2.85) % 100;
+        const duration = 7 + (i % 6) * 1.8;
+        const delay = (i * 0.35) % 7;
+        const rotateStart = (i * 45) % 360;
+
+        return (
+          <motion.div
+            key={i}
+            initial={{
+              y: -40,
+              x: `${left}vw`,
+              rotate: rotateStart,
+              opacity: 0
+            }}
+            animate={{
+              y: ['0vh', '105vh'],
+              x: [`${left}vw`, `${left + (i % 2 === 0 ? 8 : -8)}vw`, `${left + (i % 2 === 0 ? -6 : 6)}vw`, `${left + (i % 2 === 0 ? 10 : -10)}vw`],
+              rotate: [rotateStart, rotateStart + 360],
+              opacity: [0, 0.9, 0.9, 0]
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: delay,
+              ease: 'linear'
+            }}
+            className="absolute top-0"
+          >
+            <svg
+              width={size}
+              height={size}
+              viewBox="0 0 30 30"
+              fill="none"
+              className="filter drop-shadow-[0_2px_8px_rgba(244,63,94,0.7)]"
+            >
+              <path
+                d="M15 2C15 2 7 8 7 16C7 21 11 25 15 27C19 25 23 21 23 16C23 8 15 2C15 2Z"
+                fill={i % 3 === 0 ? "#F43F5E" : i % 3 === 1 ? "#EC4899" : "#FB7185"}
+                opacity={0.9}
+              />
+            </svg>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
+
+// ☀️🌧️ Animated Sun Rain & Glowing Ray Overlay for Flower Field Background
+const SunRainOverlay = () => {
+  const drops = Array.from({ length: 45 });
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+      {/* Radiant Sunbeam Light Flares */}
+      <div className="absolute -top-20 -right-20 w-[650px] h-[650px] bg-gradient-to-br from-amber-300/30 via-yellow-400/15 to-transparent rounded-full blur-[80px] animate-pulse" />
+      <div className="absolute top-0 right-1/4 w-[450px] h-[750px] bg-gradient-to-b from-amber-200/25 via-yellow-300/10 to-transparent rotate-[-25deg] blur-2xl pointer-events-none" />
+
+      {/* Slanted Falling Raindrops */}
+      {drops.map((_, i) => {
+        const left = (i * 2.2) % 100;
+        const duration = 0.8 + (i % 6) * 0.22;
+        const delay = (i * 0.12) % 2;
+        const height = 22 + (i % 4) * 14;
+
+        return (
+          <motion.div
+            key={i}
+            initial={{
+              y: -50,
+              x: `${left}vw`,
+              opacity: 0
+            }}
+            animate={{
+              y: ['0vh', '110vh'],
+              x: [`${left}vw`, `${left - 6}vw`],
+              opacity: [0, 0.75, 0.75, 0]
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: delay,
+              ease: 'linear'
+            }}
+            style={{ height: `${height}px` }}
+            className="absolute top-0 w-[1.5px] bg-gradient-to-b from-sky-200/90 via-cyan-300/70 to-transparent rounded-full shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 export const HeroSection = ({ profile }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -77,6 +176,11 @@ export const HeroSection = ({ profile }) => {
             playsInline
             className="w-full h-full object-cover opacity-40 filter brightness-90 contrast-110"
           />
+          
+          {/* Overlay Particle Effects */}
+          {activeOption.id === 'CHERRY_BLOSSOM' && <SakuraPetalRain />}
+          {activeOption.id === 'FLOWER_FIELD' && <SunRainOverlay />}
+
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/40" />
         </motion.div>
       </AnimatePresence>
