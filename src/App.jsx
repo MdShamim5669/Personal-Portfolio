@@ -35,7 +35,7 @@ export default function App() {
       <AuthProvider>
         <TargetCursor 
           spinDuration={2}
-          hideDefaultCursor={true}
+          hideDefaultCursor={false}
           parallaxOn={true}
           cursorColor="#06b6d4"
           cursorColorOnTarget="#38bdf8"
