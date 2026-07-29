@@ -74,9 +74,9 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-[#040711] text-slate-200 border-t border-slate-800/80 overflow-hidden font-sans pt-12 pb-8">
-      {/* Top glowing ambient gradient line */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 shadow-[0_0_15px_rgba(6,182,212,0.8)]" />
+    <footer className="relative bg-[#040711] text-slate-200 border-t border-slate-800/80 overflow-hidden font-sans pt-20 sm:pt-24 pb-12">
+      {/* Top glowing ambient gradient line positioned at absolute top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 shadow-[0_0_20px_rgba(6,182,212,0.9)]" />
 
       {/* Ambient background light spots */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
@@ -90,7 +90,7 @@ export const Footer = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="p-8 sm:p-10 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl mb-16 flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden group transition-all duration-500"
+          className="p-8 sm:p-10 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl mt-4 sm:mt-6 mb-16 flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden group transition-all duration-500"
         >
           {/* Subtle Background Glow behind Banner */}
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-cyan-500/20 via-indigo-500/10 to-transparent rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700 pointer-events-none" />

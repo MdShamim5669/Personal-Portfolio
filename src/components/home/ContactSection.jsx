@@ -139,13 +139,7 @@ export const ContactSection = () => {
             </div>
           </div>
 
-          {/* Response SLA Badge */}
-          <div className="pt-4 border-t border-slate-800/80">
-            <div className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs font-semibold text-slate-300 shadow-md">
-              <Clock className="w-4 h-4 text-cyan-400 shrink-0 animate-pulse" />
-              <span>Typical Response SLA: <strong className="text-cyan-400 font-mono font-bold">&lt; 2 Hours</strong></span>
-            </div>
-          </div>
+
         </div>
 
         {/* RIGHT COLUMN: Interactive Message Form Card */}

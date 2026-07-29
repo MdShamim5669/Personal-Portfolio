@@ -1,0 +1,17 @@
+[debug] [2026-07-29T22:52:43.013Z] ----------------------------------------------------------------------
+[debug] [2026-07-29T22:52:43.020Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only hosting
+[debug] [2026-07-29T22:52:43.023Z] CLI Version:   15.24.0
+[debug] [2026-07-29T22:52:43.024Z] Platform:      win32
+[debug] [2026-07-29T22:52:43.024Z] Node Version:  v24.11.0
+[debug] [2026-07-29T22:52:43.024Z] Detected Agent: antigravity
+[debug] [2026-07-29T22:52:43.025Z] Time:          Thu Jul 30 2026 04:52:43 GMT+0600 (Bangladesh Standard Time)
+[debug] [2026-07-29T22:52:43.025Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-07-29T22:52:49.908Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-07-29T22:52:49.910Z] > authorizing via signed-in user (tamjidulislamsamim@gmail.com)
+[debug] [2026-07-29T22:52:49.910Z] [iam] checking project tamjiudulislamshamim for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-07-29T22:52:49.956Z] Checked if tokens are valid: true, expires at: 1785367817686
+[debug] [2026-07-29T22:52:49.957Z] Checked if tokens are valid: true, expires at: 1785367817686
+[debug] [2026-07-29T22:52:49.960Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/tamjiudulislamshamim:testIamPermissions [none]
+[debug] [2026-07-29T22:52:49.960Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/tamjiudulislamshamim:testIamPermissions  x-goog-user-project=tamjiudulislamshamim
+[debug] [2026-07-29T22:52:49.960Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/tamjiudulislamshamim:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
