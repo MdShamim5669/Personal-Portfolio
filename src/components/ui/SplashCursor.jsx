@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
 const SplashCursor = ({
-  COLOR = '#06b6d4',
-  RAINBOW_MODE = true,
+  COLOR = '#38bdf8',
+  RAINBOW_MODE = false,
   SPLAT_FORCE = 10,
-  BIRD_SIZE = 1.2,
-  MAX_BIRDS = 60
+  BIRD_SIZE = 0.35,
+  MAX_BIRDS = 90
 }) => {
   const canvasRef = useRef(null);
 
@@ -25,23 +25,27 @@ const SplashCursor = ({
     window.addEventListener('resize', handleResize);
 
     const birds = [];
-    const colors = [
-      '#06b6d4', // cyan
+
+    // Subtle, elegant bird color palette (soft cyan, sky blue, muted indigo, slate white)
+    const softPalette = [
       '#38bdf8', // sky blue
-      '#818cf8', // indigo
-      '#a855f7', // purple
-      '#ec4899', // pink
-      '#34d399'  // emerald
+      '#06b6d4', // cyan
+      '#818cf8', // soft indigo
+      '#94a3b8', // slate blue
+      '#cbd5e1', // soft silver
+      '#e2e8f0'  // soft white
     ];
 
     let lastMousePos = { x: width / 2, y: height / 2 };
-    let mouseVelocity = { x: 0, y: 0 };
     let colorIndex = 0;
 
-    const getRandomColor = () => {
-      if (!RAINBOW_MODE) return COLOR;
-      colorIndex = (colorIndex + 1) % colors.length;
-      return colors[colorIndex];
+    const getBirdColor = () => {
+      if (!RAINBOW_MODE) {
+        // Randomly pick from soft subtle palette for natural bird diversity
+        return softPalette[Math.floor(Math.random() * softPalette.length)];
+      }
+      colorIndex = (colorIndex + 1) % softPalette.length;
+      return softPalette[colorIndex];
     };
 
     const spawnBird = (x, y, vx, vy, count = 1) => {
@@ -50,21 +54,26 @@ const SplashCursor = ({
           birds.shift(); // Keep performance crisp by recycling oldest birds
         }
 
-        const angle = Math.atan2(vy, vx) + (Math.random() - 0.5) * 0.6;
-        const speed = Math.hypot(vx, vy) * 0.3 + Math.random() * 2 + 1.5;
+        // Spread out widely behind the cursor motion vector
+        const spreadAngle = Math.atan2(vy, vx) + (Math.random() - 0.5) * 1.4;
+        const speed = Math.hypot(vx, vy) * 0.25 + Math.random() * 1.8 + 1.2;
+
+        // Wide positional spread so birds fly across a larger background area behind cursor
+        const offsetDist = Math.random() * 50;
+        const offsetDir = Math.random() * Math.PI * 2;
 
         birds.push({
-          x: x + (Math.random() - 0.5) * 15,
-          y: y + (Math.random() - 0.5) * 15,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          heading: angle,
+          x: x + Math.cos(offsetDir) * offsetDist,
+          y: y + Math.sin(offsetDir) * offsetDist,
+          vx: Math.cos(spreadAngle) * speed,
+          vy: Math.sin(spreadAngle) * speed,
+          heading: spreadAngle,
           wingPhase: Math.random() * Math.PI * 2,
-          wingSpeed: 0.15 + Math.random() * 0.1,
-          size: (0.8 + Math.random() * 0.7) * BIRD_SIZE,
-          color: getRandomColor(),
-          opacity: 1,
-          decay: 0.015 + Math.random() * 0.01,
+          wingSpeed: 0.18 + Math.random() * 0.12,
+          size: (0.3 + Math.random() * 0.3) * BIRD_SIZE,
+          color: getBirdColor(),
+          opacity: 0.85,
+          decay: 0.012 + Math.random() * 0.008,
           life: 0
         });
       }
@@ -75,11 +84,9 @@ const SplashCursor = ({
       const dy = e.clientY - lastMousePos.y;
       const dist = Math.hypot(dx, dy);
 
-      mouseVelocity = { x: dx, y: dy };
-
-      // Spawn birds along movement vector if mouse moved noticeably
+      // Spawn delicate birds widely along mouse path
       if (dist > 3) {
-        const count = Math.min(Math.floor(dist / 8) + 1, 4);
+        const count = Math.min(Math.floor(dist / 6) + 1, 4);
         spawnBird(e.clientX, e.clientY, dx, dy, count);
       }
 
@@ -87,11 +94,11 @@ const SplashCursor = ({
     };
 
     const handleMouseDown = (e) => {
-      // Splat effect: burst 12 birds flying in 360-degree flock!
-      const burstCount = 12;
+      // Splat effect: release a gentle wide flock of 14 small birds flying outward
+      const burstCount = 14;
       for (let i = 0; i < burstCount; i++) {
-        const angle = (i / burstCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
-        const speed = 4 + Math.random() * 4;
+        const angle = (i / burstCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+        const speed = 3 + Math.random() * 3.5;
         const vx = Math.cos(angle) * speed;
         const vy = Math.sin(angle) * speed;
         spawnBird(e.clientX, e.clientY, vx, vy, 1);
@@ -114,30 +121,30 @@ const SplashCursor = ({
     window.addEventListener('mousedown', handleMouseDown, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
-    // Draw single stylized bird on Canvas
+    // Draw delicate, small stylized flying bird on Canvas
     const drawBird = (b) => {
       ctx.save();
       ctx.translate(b.x, b.y);
       ctx.rotate(b.heading);
       ctx.scale(b.size, b.size);
-      ctx.globalAlpha = Math.max(0, b.opacity);
+      ctx.globalAlpha = Math.max(0, b.opacity * 0.8);
 
-      // Smooth wing flapping angle
-      const flap = Math.sin(b.wingPhase) * 7;
+      // Flapping wings
+      const flap = Math.sin(b.wingPhase) * 6;
 
       ctx.shadowColor = b.color;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 3;
       ctx.fillStyle = b.color;
       ctx.strokeStyle = b.color;
-      ctx.lineWidth = 1.2;
+      ctx.lineWidth = 1.0;
 
-      // Draw graceful V-bird silhouette
+      // Draw elegant small bird silhouette
       ctx.beginPath();
-      ctx.moveTo(7, 0); // Beak tip
-      ctx.quadraticCurveTo(0, -2, -3, -12 + flap); // Right wing tip
-      ctx.quadraticCurveTo(-4, -1, -7, 0); // Right wing inner
-      ctx.quadraticCurveTo(-4, 1, -3, 12 - flap); // Left wing tip
-      ctx.quadraticCurveTo(0, 2, 7, 0); // Back to beak
+      ctx.moveTo(6, 0); // Beak tip
+      ctx.quadraticCurveTo(0, -2, -3, -10 + flap); // Right wing tip
+      ctx.quadraticCurveTo(-4, -1, -6, 0); // Tail base
+      ctx.quadraticCurveTo(-4, 1, -3, 10 - flap); // Left wing tip
+      ctx.quadraticCurveTo(0, 2, 6, 0); // Back to beak
       ctx.closePath();
       ctx.fill();
 
@@ -151,19 +158,18 @@ const SplashCursor = ({
       for (let i = birds.length - 1; i >= 0; i--) {
         const b = birds[i];
 
-        // Update physics
+        // Physics update with gentle aerodynamic drift
         b.x += b.vx;
         b.y += b.vy;
         b.wingPhase += b.wingSpeed;
         b.opacity -= b.decay;
         b.life += 1;
 
-        // Aerodynamic air resistance & slight curve
-        b.vx *= 0.97;
-        b.vy *= 0.97;
+        b.vx *= 0.975;
+        b.vy *= 0.975;
         b.heading = Math.atan2(b.vy, b.vx);
 
-        if (b.opacity <= 0 || b.x < -50 || b.x > width + 50 || b.y < -50 || b.y > height + 50) {
+        if (b.opacity <= 0 || b.x < -60 || b.x > width + 60 || b.y < -60 || b.y > height + 60) {
           birds.splice(i, 1);
         } else {
           drawBird(b);
