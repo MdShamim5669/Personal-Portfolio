@@ -8,6 +8,7 @@ import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { HomePage } from './pages/HomePage';
 import { CoursesPage } from './pages/CoursesPage';
+import SplashCursor from './components/ui/SplashCursor';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +34,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <SplashCursor RAINBOW_MODE={true} COLOR="#06b6d4" />
         <Toaster
           position="top-right"
           richColors
