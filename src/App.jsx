@@ -34,8 +34,9 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TargetCursor 
+          targetSelector=".cursor-target, button, a, [role='button']"
           spinDuration={2}
-          hideDefaultCursor={false}
+          hideDefaultCursor={true}
           parallaxOn={true}
           cursorColor="#06b6d4"
           cursorColorOnTarget="#38bdf8"

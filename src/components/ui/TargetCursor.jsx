@@ -33,7 +33,7 @@ const getContainingBlockOffset = block => {
 };
 
 const TargetCursor = ({
-  targetSelector = '.cursor-target',
+  targetSelector = '.cursor-target, button, a, [role="button"]',
   spinDuration = 2,
   hideDefaultCursor = true,
   hoverDuration = 0.2,
@@ -52,14 +52,14 @@ const TargetCursor = ({
   const tickerFnRef = useRef(null);
   const activeStrengthRef = useRef(0);
 
+  // Robust Mobile detection - only disable on small screen smartphones
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
-    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isSmallScreen = window.innerWidth <= 768;
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+    const mobileRegex = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
     const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
-    return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
+    return isSmallScreen && isMobileUserAgent;
   }, []);
 
   const constants = useMemo(
@@ -100,7 +100,7 @@ const TargetCursor = ({
     let resumeTimeout = null;
 
     const cleanupTarget = target => {
-      if (currentLeaveHandler) {
+      if (currentLeaveHandler && target) {
         target.removeEventListener('mouseleave', currentLeaveHandler);
       }
       currentLeaveHandler = null;
