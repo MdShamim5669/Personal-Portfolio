@@ -243,7 +243,7 @@ export const HeroSection = ({ profile }) => {
                 href={profile?.githubUrl || 'https://github.com/samim'}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/50 backdrop-blur-md transition-all shadow-md hover:shadow-[0_0_15px_rgba(6,182,212,0.35)] overflow-hidden"
+                className="cursor-target group relative p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/50 backdrop-blur-md transition-all shadow-md hover:shadow-[0_0_15px_rgba(6,182,212,0.35)] overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <Github className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:rotate-12" />
@@ -255,7 +255,7 @@ export const HeroSection = ({ profile }) => {
                 href={profile?.linkedinUrl || 'https://www.linkedin.com/in/md-samim5669/'}
                 target="_blank"
                 rel="noreferrer"
-                className="group relative p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50 backdrop-blur-md transition-all shadow-md hover:shadow-[0_0_15px_rgba(99,102,241,0.35)] overflow-hidden"
+                className="cursor-target group relative p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/50 backdrop-blur-md transition-all shadow-md hover:shadow-[0_0_15px_rgba(99,102,241,0.35)] overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <Linkedin className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:-rotate-12" />
@@ -374,7 +374,7 @@ export const HeroSection = ({ profile }) => {
                   <button
                     key={opt.id}
                     onClick={() => handleSelectTab(idx)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                    className={`cursor-target px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                       isActive
                         ? `bg-gradient-to-r ${opt.color} text-white shadow-lg border border-white/20`
                         : 'bg-slate-900/90 text-slate-400 hover:text-slate-200 border border-slate-800'
@@ -390,14 +390,14 @@ export const HeroSection = ({ profile }) => {
               <div className="flex items-center gap-1 ml-2 border-l border-slate-800 pl-2">
                 <button
                   onClick={handlePrev}
-                  className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+                  className="cursor-target p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
                   title="Previous Video Banner"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={handleNext}
-                  className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+                  className="cursor-target p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
                   title="Next Video Banner"
                 >
                   <ChevronRight className="w-4 h-4" />
