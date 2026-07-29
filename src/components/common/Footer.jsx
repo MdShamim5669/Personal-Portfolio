@@ -271,11 +271,6 @@ export const Footer = () => {
           </p>
 
           <div className="flex items-center gap-4 font-semibold">
-            <Link to="/admin/login" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
-              <span>Admin Portal</span>
-              <ExternalLink className="w-3 h-3" />
-            </Link>
-            <span>•</span>
             <a href="/CV_Shamim.pdf" target="_blank" rel="noreferrer" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
               <span>View CV PDF</span>
               <ExternalLink className="w-3 h-3" />

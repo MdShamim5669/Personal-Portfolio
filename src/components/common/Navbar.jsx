@@ -73,8 +73,8 @@ export const Navbar = () => {
             items={navLinks.map(link => ({ ...link, onClick: (e, href) => handleNavClick(e, href) }))}
           />
 
-          {/* Admin link or Login */}
-          {isAdmin ? (
+          {/* Admin Dashboard - only visible when logged in as admin */}
+          {isAdmin && (
             <div className="flex items-center gap-3">
               <Link
                 to="/admin/dashboard"
@@ -90,13 +90,6 @@ export const Navbar = () => {
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
-          ) : (
-            <Link
-              to="/admin/login"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:scale-105 transition-all"
-            >
-              <User className="w-3.5 h-3.5" /> Admin
-            </Link>
           )}
         </div>
 
@@ -125,21 +118,13 @@ export const Navbar = () => {
               <span>{link.label}</span>
             </a>
           ))}
-          {isAdmin ? (
+          {isAdmin && (
             <Link
               to="/admin/dashboard"
               onClick={() => setMobileOpen(false)}
               className="mt-2 text-center py-2 bg-indigo-600 text-white rounded-lg font-semibold text-sm"
             >
               Admin Dashboard
-            </Link>
-          ) : (
-            <Link
-              to="/admin/login"
-              onClick={() => setMobileOpen(false)}
-              className="mt-2 text-center py-2 bg-slate-800 text-slate-200 rounded-lg text-sm"
-            >
-              Admin Portal
             </Link>
           )}
         </div>
