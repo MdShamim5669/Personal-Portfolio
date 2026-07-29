@@ -11,7 +11,8 @@ export const ChromaGrid = ({
   rows = 2,
   damping = 0.45,
   fadeOut = 0.6,
-  ease = 'power3.out'
+  ease = 'power3.out',
+  useElectricBorder = false
 }) => {
   const rootRef = useRef(null);
   const fadeRef = useRef(null);
@@ -145,16 +146,8 @@ export const ChromaGrid = ({
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
     >
-      {data.map((c, i) => (
-        <ElectricBorder 
-          key={i} 
-          color={c.borderColor || '#06b6d4'} 
-          speed={1} 
-          chaos={0.12} 
-          borderRadius={20} 
-          className="h-full cursor-pointer"
-          onClick={() => handleCardClick(c.url, c.onClick)}
-        >
+      {data.map((c, i) => {
+        const cardContent = (
           <article
             className="chroma-card"
             onMouseMove={handleCardMove}
@@ -175,8 +168,30 @@ export const ChromaGrid = ({
               {c.location && <span className="location text-sm">{c.location}</span>}
             </footer>
           </article>
-        </ElectricBorder>
-      ))}
+        );
+
+        if (useElectricBorder) {
+          return (
+            <ElectricBorder 
+              key={i} 
+              color={c.borderColor || '#06b6d4'} 
+              speed={1} 
+              chaos={0.12} 
+              borderRadius={20} 
+              className="h-full cursor-pointer"
+              onClick={() => handleCardClick(c.url, c.onClick)}
+            >
+              {cardContent}
+            </ElectricBorder>
+          );
+        }
+
+        return (
+          <div key={i} className="h-full cursor-pointer" onClick={() => handleCardClick(c.url, c.onClick)}>
+            {cardContent}
+          </div>
+        );
+      })}
       <div className="chroma-overlay" />
       <div ref={fadeRef} className="chroma-fade" />
     </div>
