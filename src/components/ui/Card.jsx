@@ -16,7 +16,7 @@ export default function Card({ children, className, hoverEffect = true, onClick,
       }
       onClick={onClick}
       className={cn(
-        'cursor-target group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-xl transition-shadow duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-slate-700/80 overflow-hidden',
+        'group relative bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur-xl transition-shadow duration-300 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-slate-700/80 overflow-hidden',
         onClick && 'cursor-pointer',
         className
       )}

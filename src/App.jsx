@@ -7,7 +7,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { HomePage } from './pages/HomePage';
-import TargetCursor from './components/ui/TargetCursor';
+import { CoursesPage } from './pages/CoursesPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,14 +33,6 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TargetCursor 
-          targetSelector=".cursor-target, button, a, [role='button']"
-          spinDuration={2}
-          hideDefaultCursor={true}
-          parallaxOn={true}
-          cursorColor="#06b6d4"
-          cursorColorOnTarget="#38bdf8"
-        />
         <Toaster
           position="top-right"
           richColors

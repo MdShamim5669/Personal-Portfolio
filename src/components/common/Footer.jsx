@@ -240,7 +240,7 @@ export const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
                 title="GitHub Profile"
-                className="cursor-target p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
+                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
               >
                 <Github className="w-4 h-4" />
               </a>
@@ -249,14 +249,14 @@ export const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
                 title="LinkedIn Profile"
-                className="cursor-target p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
+                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
               >
                 <Linkedin className="w-4 h-4" />
               </a>
               <a
                 href="mailto:tamjidulislamsamim@gmail.com"
                 title="Send Email"
-                className="cursor-target p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
+                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
               >
                 <Mail className="w-4 h-4" />
               </a>
@@ -285,7 +285,7 @@ export const Footer = () => {
           {/* Floating Back To Top Button */}
           <button
             onClick={scrollToTop}
-            className="cursor-target group flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 hover:border-cyan-400 text-slate-300 hover:text-white text-xs font-extrabold shadow-lg hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 hover:border-cyan-400 text-slate-300 hover:text-white text-xs font-extrabold shadow-lg hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105 transition-all duration-300 cursor-pointer"
             title="Back to top"
           >
             <span>Back to Top</span>

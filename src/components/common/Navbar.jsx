@@ -52,7 +52,7 @@ export const Navbar = () => {
         <a
           href="#about"
           onClick={(e) => handleNavClick(e, '#about')}
-          className="cursor-target flex items-center gap-2.5 group cursor-pointer"
+          className="flex items-center gap-2.5 group cursor-pointer"
         >
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
             <BrainCircuit className="w-5 h-5 text-white" />
