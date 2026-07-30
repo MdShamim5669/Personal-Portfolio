@@ -45,8 +45,17 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const ADMIN_EMAIL = 'tamjidulislamsamim@gmail.com';
+  const isAdmin = Boolean(
+    user && (
+      user.role === 'ADMIN' ||
+      user.role === 'admin' ||
+      user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+    )
+  );
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, logout, isAdmin: user?.role === 'ADMIN' }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
