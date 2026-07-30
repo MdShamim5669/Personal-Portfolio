@@ -96,9 +96,6 @@ export const EducationSection = ({ profile, educationPhotos = [] }) => {
                     <Badge variant="emerald" className="gap-1.5 py-1.5 px-3.5 text-xs font-bold shadow-sm">
                       <Calendar className="w-4 h-4" /> 2022 – 2026
                     </Badge>
-                    <Badge variant="cyan" className="gap-1.5 py-1.5 px-3.5 text-xs font-bold font-mono border-cyan-400/40 bg-cyan-500/20 text-cyan-300 shadow-sm">
-                      <Award className="w-4 h-4 text-cyan-300" /> CGPA: {profile?.cgpa || '3.55'} / 4.00
-                    </Badge>
                   </div>
 
                   <div>
@@ -111,9 +108,6 @@ export const EducationSection = ({ profile, educationPhotos = [] }) => {
                     <div className="flex flex-wrap items-center gap-4 mt-2">
                       <span className="text-xs text-slate-400 flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5 text-indigo-400" /> {profile?.location || 'Dhaka, Bangladesh'}
-                      </span>
-                      <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                        <Award className="w-3.5 h-3.5 text-amber-400" /> Cumulative GPA: {profile?.cgpa || '3.55'}
                       </span>
                     </div>
                   </div>
