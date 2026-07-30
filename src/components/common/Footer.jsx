@@ -19,6 +19,7 @@ import {
   Heart
 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
+import { HexagonBackground } from '../animate-ui/components/backgrounds/hexagon';
 
 export const Footer = () => {
   const navigate = useNavigate();
@@ -75,6 +76,11 @@ export const Footer = () => {
 
   return (
     <footer className="relative bg-[#040711] text-slate-200 border-t border-slate-800/80 overflow-hidden font-sans pt-20 sm:pt-24 pb-12">
+      {/* Hexagon Interactive Grid Background */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+        <HexagonBackground hexagonSize={65} hexagonMargin={2} className="bg-transparent dark:bg-transparent" />
+      </div>
+
       {/* Top glowing ambient gradient line positioned at absolute top */}
       <div className="absolute top-0 left-0 right-0 h-[2px] w-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 shadow-[0_0_20px_rgba(6,182,212,0.9)]" />
 
