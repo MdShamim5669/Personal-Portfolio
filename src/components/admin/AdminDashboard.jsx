@@ -1440,7 +1440,7 @@ export const AdminDashboard = () => {
                 <p className="text-xs text-slate-400 font-medium">
                   Direct inquiries delivered to{' '}
                   <span className="text-indigo-400 font-semibold font-mono">
-                    {profile.email || 'sifatkhanjoy996@gmail.com'}
+                    {profile.email || 'tamjidulislamsamim@gmail.com'}
                   </span>{' '}
                   &amp; website inbox
                 </p>
