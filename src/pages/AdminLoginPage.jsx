@@ -9,8 +9,14 @@ export const AdminLoginPage = () => {
   const [email, setEmail] = useState('tamjidulislamsamim@gmail.com');
   const [password, setPassword] = useState('AdminSecurePassword123!');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isAdmin } = useAuth();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (isAdmin) {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [isAdmin, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
