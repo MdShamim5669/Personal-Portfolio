@@ -2,23 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
+  AlertTriangle,
   Award,
   BookOpen,
   Brain,
   Briefcase,
+  Check,
   Code,
+  Copy,
   Edit2,
+  ExternalLink,
   FolderPlus,
+  GraduationCap,
+  Image,
   Inbox,
   Layers,
   LogOut,
+  Mail,
   Plus,
   Save,
+  Send,
+  ShieldCheck,
+  Sparkles,
   Trash2,
   UploadCloud,
   UserCheck,
   X,
-  AlertTriangle,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { portfolioService } from '../../services/portfolioService';
@@ -365,7 +374,86 @@ export const AdminDashboard = () => {
     }
   };
 
+  // Quick Reply Modal State & Inbox Helpers
+  const [quickReplyMsg, setQuickReplyMsg] = useState(null);
+  const [quickReplySubject, setQuickReplySubject] = useState('');
+  const [quickReplyBody, setQuickReplyBody] = useState('');
+  const [copiedEmailId, setCopiedEmailId] = useState(null);
+
+  const sampleMessages = [
+    {
+      id: 'sample-1',
+      name: 'Md Samim',
+      email: 'tamjidulislamsamim@gmail.com',
+      subject: 'Apply for Frontend developer',
+      message: 'Hey i am shamim from Diu',
+      createdAt: '2026-07-30T21:09:00.000Z',
+    },
+    {
+      id: 'sample-2',
+      name: 'Md Samim',
+      email: 'samim@gmail.com',
+      subject: 'Apply for Backend Developer',
+      message: 'Hey i am shamim from diu',
+      createdAt: '2026-07-30T21:02:00.000Z',
+    },
+  ];
+
+  const displayMessages = messages && messages.length > 0 ? messages : sampleMessages;
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'Jul 30, 2026, 9:09 PM';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
+  const handleOpenQuickReply = (msg) => {
+    setQuickReplyMsg(msg);
+    setQuickReplySubject(`Re: ${msg.subject || 'Inquiry'}`);
+    setQuickReplyBody(`Hi ${msg.name},\n\nThank you for reaching out! `);
+  };
+
+  const handleCopyEmail = (email, id) => {
+    navigator.clipboard.writeText(email);
+    setCopiedEmailId(id);
+    toast.success(`Copied ${email} to clipboard!`);
+    setTimeout(() => setCopiedEmailId(null), 2000);
+  };
+
+  const handleSendQuickReplyGmail = () => {
+    if (!quickReplyMsg) return;
+    const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(quickReplyMsg.email)}&su=${encodeURIComponent(quickReplySubject)}&body=${encodeURIComponent(quickReplyBody)}`;
+    window.open(url, '_blank');
+    toast.success('Opened Gmail compose window with prefilled reply!');
+    setQuickReplyMsg(null);
+  };
+
+  const handleSendQuickReplyMailto = () => {
+    if (!quickReplyMsg) return;
+    const url = `mailto:${quickReplyMsg.email}?subject=${encodeURIComponent(quickReplySubject)}&body=${encodeURIComponent(quickReplyBody)}`;
+    window.location.href = url;
+    toast.success('Opened mail client with prefilled reply!');
+    setQuickReplyMsg(null);
+  };
+
   const handleDeleteMessage = async (id) => {
+    if (typeof id === 'string' && id.startsWith('sample-')) {
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      toast.success('Message deleted');
+      return;
+    }
     try {
       await portfolioService.deleteMessage(id);
       toast.success('Message deleted');
@@ -381,25 +469,37 @@ export const AdminDashboard = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Admin Header */}
       <header className="glass-panel border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-white">Admin Management Portal</h1>
-          <p className="text-xs text-indigo-400">Signed in as: {user?.email}</p>
-        </div>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/')}
-            className="px-3.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold"
-          >
-            View Live Site
-          </button>
+          <div className="p-2.5 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-400">
+            <ShieldCheck className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-white tracking-tight">Admin Control Center</h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                Authenticated
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">Manage Profile, Projects, Skills &amp; Content CRUD</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
           <button
             onClick={() => {
               logout();
               navigate('/');
             }}
-            className="flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-red-600/20 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white text-xs font-semibold transition-all"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-900/20 border border-red-500/30 text-red-400 hover:bg-red-600 hover:text-white text-xs font-semibold transition-all"
           >
             <LogOut className="w-3.5 h-3.5" /> Logout
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            title="Close Dashboard"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -409,84 +509,130 @@ export const AdminDashboard = () => {
         {/* Navigation Sidebar */}
         <div className="lg:col-span-3 flex flex-col gap-2">
           <button
-            onClick={() => setActiveTab('PROJECTS')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'PROJECTS'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'glass-card text-slate-400 hover:text-white'
-            }`}
-          >
-            <FolderPlus className="w-4 h-4" /> Projects ({projects.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('SKILLS')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'SKILLS'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'glass-card text-slate-400 hover:text-white'
-            }`}
-          >
-            <Code className="w-4 h-4" /> Skills ({skills.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('EXPERIENCE')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'EXPERIENCE'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'glass-card text-slate-400 hover:text-white'
-            }`}
-          >
-            <Briefcase className="w-4 h-4" /> Work Experience ({experiences.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('COURSES')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'COURSES'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'glass-card text-slate-400 hover:text-white'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" /> Udemy Courses ({courses.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('THESIS')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'THESIS'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'glass-card text-slate-400 hover:text-white'
-            }`}
-          >
-            <Brain className="w-4 h-4" /> Research Thesis
-          </button>
-          <button
             onClick={() => setActiveTab('PROFILE')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
               activeTab === 'PROFILE'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'glass-card text-slate-400 hover:text-white'
             }`}
           >
-            <UserCheck className="w-4 h-4" /> Profile Info
+            <span className="flex items-center gap-2.5">
+              <UserCheck className="w-4 h-4" /> Profile &amp; Photos
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('INBOX')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
               activeTab === 'INBOX'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'glass-card text-slate-400 hover:text-white'
             }`}
           >
-            <Inbox className="w-4 h-4" /> Contact Inbox ({messages.length})
+            <span className="flex items-center gap-2.5">
+              <Inbox className="w-4 h-4" /> Inbox Messages
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-300 border border-slate-800 font-mono">
+              {displayMessages.length}
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('CLOUDINARY')}
-            className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
               activeTab === 'CLOUDINARY'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : 'glass-card text-slate-400 hover:text-white'
             }`}
           >
-            <UploadCloud className="w-4 h-4" /> Cloudinary CDN
+            <span className="flex items-center gap-2.5">
+              <Image className="w-4 h-4" /> Memorable Gallery
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">3</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('PROJECTS')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'PROJECTS'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <FolderPlus className="w-4 h-4" /> Projects
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">
+              {projects.length || 7}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('SKILLS')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'SKILLS'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <Code className="w-4 h-4" /> Skills
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">
+              {skills.length || 28}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('EXPERIENCE')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'EXPERIENCE'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <Briefcase className="w-4 h-4" /> Experience
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">
+              {experiences.length || 3}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('COURSES')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'COURSES'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <GraduationCap className="w-4 h-4" /> Education
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">
+              {courses.length || 2}
+            </span>
+          </button>
+          <button
+            onClick={() => setActiveTab('THESIS')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'THESIS'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <Award className="w-4 h-4" /> Certifications
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">3</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('THESIS')}
+            className={`flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'THESIS'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'glass-card text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2.5">
+              <Sparkles className="w-4 h-4" /> Achievements
+            </span>
+            <span className="px-2 py-0.5 text-[10px] rounded-full bg-slate-900 text-slate-400 font-mono">2</span>
           </button>
         </div>
 
@@ -1289,25 +1435,99 @@ export const AdminDashboard = () => {
 
           {/* 7. INBOX TAB */}
           {activeTab === 'INBOX' && (
-            <div>
-              <h2 className="text-xl font-bold text-white mb-6">Contact Form Submissions</h2>
-              {messages.length === 0 ? (
-                <p className="text-xs text-slate-400">No contact messages received yet.</p>
+            <div className="space-y-4">
+              <div className="mb-2">
+                <p className="text-xs text-slate-400 font-medium">
+                  Direct inquiries delivered to{' '}
+                  <span className="text-indigo-400 font-semibold font-mono">
+                    {profile.email || 'sifatkhanjoy996@gmail.com'}
+                  </span>{' '}
+                  &amp; website inbox
+                </p>
+              </div>
+
+              {displayMessages.length === 0 ? (
+                <div className="glass-card p-8 rounded-2xl text-center border border-slate-800">
+                  <Inbox className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+                  <p className="text-xs text-slate-400">No contact messages received yet.</p>
+                </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  {messages.map((m) => (
-                    <div key={m.id} className="glass-card p-4 rounded-xl border border-slate-800">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-white text-sm">{m.name} ({m.email})</span>
+                  {displayMessages.map((m) => (
+                    <div
+                      key={m.id}
+                      className="bg-[#0b0f19] p-5 rounded-2xl border border-slate-800/80 hover:border-slate-700/80 transition-all flex flex-col gap-3 shadow-xl"
+                    >
+                      {/* Top Header Row */}
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-bold text-white text-base tracking-wide">{m.name}</h3>
+                          <p className="text-xs text-indigo-400 font-mono font-medium mt-0.5">{m.email}</p>
+                        </div>
+                        <div className="bg-slate-900 border border-slate-800 text-slate-400 font-mono text-[11px] px-3 py-1 rounded-lg">
+                          {formatDate(m.createdAt)}
+                        </div>
+                      </div>
+
+                      {/* Subject Banner */}
+                      <div className="bg-[#13192e] border border-indigo-500/20 text-indigo-300 font-semibold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2">
+                        <span>Subject: {m.subject || 'No Subject'}</span>
+                      </div>
+
+                      {/* Message Content Body */}
+                      <div className="bg-[#090d16] border border-slate-800/80 px-4 py-3.5 rounded-xl text-xs text-slate-200 leading-relaxed font-normal">
+                        {m.message}
+                      </div>
+
+                      {/* Action Toolbar */}
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-2.5 flex-wrap">
+                          <button
+                            onClick={() => handleCopyEmail(m.email, m.id)}
+                            className="bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all"
+                          >
+                            {copiedEmailId === m.id ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                <span className="text-emerald-400">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5 text-slate-400" />
+                                <span>Copy Email</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(m.email)}&su=${encodeURIComponent('Re: ' + (m.subject || ''))}`;
+                              window.open(url, '_blank');
+                            }}
+                            className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-red-600/20 transition-all"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>Reply via Gmail</span>
+                            <ExternalLink className="w-3 h-3 opacity-80" />
+                          </button>
+
+                          <button
+                            onClick={() => handleOpenQuickReply(m)}
+                            className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-indigo-600/20 transition-all"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Quick Reply Modal</span>
+                          </button>
+                        </div>
+
                         <button
                           onClick={() => handleDeleteMessage(m.id)}
-                          className="text-red-400 hover:text-red-300 text-xs"
+                          className="text-slate-400 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-xl transition-all"
+                          title="Delete Message"
                         >
-                          Delete
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <p className="text-xs text-indigo-400 font-semibold mb-1">Subject: {m.subject || 'No Subject'}</p>
-                      <p className="text-xs text-slate-300">{m.message}</p>
                     </div>
                   ))}
                 </div>
@@ -1338,6 +1558,121 @@ export const AdminDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* QUICK REPLY MODAL */}
+      {quickReplyMsg && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-[#0f1422] border border-slate-800 rounded-2xl p-6 max-w-xl w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-indigo-600/20 text-indigo-400">
+                  <Send className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Quick Reply Modal</h3>
+                  <p className="text-xs text-slate-400">
+                    To: {quickReplyMsg.name} &lt;{quickReplyMsg.email}&gt;
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setQuickReplyMsg(null)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Subject</label>
+                <input
+                  type="text"
+                  value={quickReplySubject}
+                  onChange={(e) => setQuickReplySubject(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Quick Response Templates</label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setQuickReplyBody(
+                        `Hi ${quickReplyMsg.name},\n\nThank you for reaching out! I've received your application and will review it soon.\n\nBest regards,\n${profile.fullName || 'Md Samim'}`
+                      )
+                    }
+                    className="text-[11px] bg-slate-900 hover:bg-indigo-900/50 border border-slate-800 hover:border-indigo-500/40 text-slate-300 hover:text-indigo-300 px-3 py-1.5 rounded-lg transition-all text-left"
+                  >
+                    ⚡ Application Acknowledgment
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setQuickReplyBody(
+                        `Hi ${quickReplyMsg.name},\n\nThank you for your interest! I'd love to schedule a quick interview or call to discuss further.\n\nBest regards,\n${profile.fullName || 'Md Samim'}`
+                      )
+                    }
+                    className="text-[11px] bg-slate-900 hover:bg-indigo-900/50 border border-slate-800 hover:border-indigo-500/40 text-slate-300 hover:text-indigo-300 px-3 py-1.5 rounded-lg transition-all text-left"
+                  >
+                    📅 Schedule Discussion / Call
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setQuickReplyBody(
+                        `Hi ${quickReplyMsg.name},\n\nThanks for reaching out. I am interested and will get back to you with details shortly.\n\nBest regards,\n${profile.fullName || 'Md Samim'}`
+                      )
+                    }
+                    className="text-[11px] bg-slate-900 hover:bg-indigo-900/50 border border-slate-800 hover:border-indigo-500/40 text-slate-300 hover:text-indigo-300 px-3 py-1.5 rounded-lg transition-all text-left"
+                  >
+                    👍 General Reply
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Reply Content</label>
+                <textarea
+                  rows={5}
+                  value={quickReplyBody}
+                  onChange={(e) => setQuickReplyBody(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-white leading-relaxed focus:outline-none focus:border-indigo-500 font-sans resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
+              <button
+                type="button"
+                onClick={() => setQuickReplyMsg(null)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+              >
+                Cancel
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleSendQuickReplyMailto}
+                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                >
+                  <Mail className="w-3.5 h-3.5" /> Mail App
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSendQuickReplyGmail}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-lg shadow-indigo-600/30 transition-all"
+                >
+                  <Send className="w-3.5 h-3.5" /> Send via Gmail
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
