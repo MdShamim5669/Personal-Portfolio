@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Phone, Send, Sparkles, Clock, CheckCircle2, Linkedin, Github, MessageSquare } from 'lucide-react';
+import { Mail, MapPin, Phone, Send, Sparkles, Clock, CheckCircle2, MessageSquare } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
 import { toast } from 'sonner';
 import { useSendMessageMutation } from '../../hooks/usePortfolioQueries';
+import {
+  FacebookIcon,
+  GoogleIcon,
+  IMessageIcon,
+  AzureLocationIcon,
+  LinkedinIcon
+} from '../ui/CustomIcons';
 
 export const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -75,13 +82,13 @@ export const ContactSection = () => {
               <motion.a
                 whileHover={{ scale: 1.02, x: 4 }}
                 href="mailto:tamjidulislamsamim@gmail.com"
-                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-cyan-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-red-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
               >
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 group-hover/item:scale-110 group-hover/item:bg-cyan-500 group-hover/item:text-white transition-all shadow-inner">
-                  <Mail className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-red-500/50 transition-all shadow-inner">
+                  <GoogleIcon className="w-6 h-6" />
                 </div>
                 <div className="overflow-hidden">
-                  <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Email Address</span>
+                  <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Gmail / Direct Email</span>
                   <span className="text-sm font-bold text-white group-hover/item:text-cyan-300 transition-colors truncate block">
                     tamjidulislamsamim@gmail.com
                   </span>
@@ -91,14 +98,14 @@ export const ContactSection = () => {
               <motion.a
                 whileHover={{ scale: 1.02, x: 4 }}
                 href="tel:+8801782938883"
-                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-indigo-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-emerald-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
               >
-                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 group-hover/item:scale-110 group-hover/item:bg-indigo-500 group-hover/item:text-white transition-all shadow-inner">
-                  <Phone className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-emerald-500/50 transition-all shadow-inner">
+                  <IMessageIcon className="w-6 h-6" fill="#34DA50" />
                 </div>
                 <div>
-                  <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Phone / WhatsApp</span>
-                  <span className="text-sm font-bold text-white group-hover/item:text-indigo-300 transition-colors block">
+                  <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Phone / iMessage</span>
+                  <span className="text-sm font-bold text-white group-hover/item:text-emerald-300 transition-colors block">
                     +880 1782-938883
                   </span>
                 </div>
@@ -111,8 +118,8 @@ export const ContactSection = () => {
                 rel="noreferrer"
                 className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-blue-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
               >
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 group-hover/item:scale-110 group-hover/item:bg-blue-500 group-hover/item:text-white transition-all shadow-inner">
-                  <Linkedin className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-blue-500/50 transition-all shadow-inner">
+                  <LinkedinIcon className="w-6 h-6" />
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">LinkedIn Profile</span>
@@ -124,14 +131,14 @@ export const ContactSection = () => {
 
               <motion.div
                 whileHover={{ scale: 1.02, x: 4 }}
-                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-emerald-500/50 shadow-lg transition-all group/item cursor-default backdrop-blur-xl"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-cyan-500/50 shadow-lg transition-all group/item cursor-default backdrop-blur-xl"
               >
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 group-hover/item:scale-110 group-hover/item:bg-emerald-500 group-hover/item:text-white transition-all shadow-inner">
-                  <MapPin className="w-5 h-5" />
+                <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-cyan-500/50 transition-all shadow-inner">
+                  <AzureLocationIcon className="w-6 h-6" />
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Location</span>
-                  <span className="text-sm font-bold text-white group-hover/item:text-emerald-300 transition-colors block">
+                  <span className="text-sm font-bold text-white group-hover/item:text-cyan-300 transition-colors block">
                     Dhaka, Bangladesh
                   </span>
                 </div>

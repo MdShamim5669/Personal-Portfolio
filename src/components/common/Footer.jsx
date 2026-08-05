@@ -3,11 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   BrainCircuit,
-  Github,
-  Linkedin,
   Mail,
   Phone,
-  MapPin,
   ArrowUp,
   ExternalLink,
   FileText,
@@ -20,6 +17,14 @@ import {
 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
 import { HexagonBackground } from '../animate-ui/components/backgrounds/hexagon';
+import {
+  FacebookIcon,
+  GoogleIcon,
+  IMessageIcon,
+  AzureLocationIcon,
+  LinkedinIcon,
+  GithubIcon
+} from '../ui/CustomIcons';
 
 export const Footer = () => {
   const navigate = useNavigate();
@@ -212,60 +217,86 @@ export const Footer = () => {
               <ShieldCheck className="w-4 h-4 text-cyan-400" /> Connect Direct
             </h4>
 
-            <div className="space-y-3 text-xs text-slate-400">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
-                  <Mail className="w-4 h-4" />
+            <div className="space-y-3.5 text-xs text-slate-400">
+              <div className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-red-500/50 group-hover:scale-105 transition-all">
+                  <GoogleIcon className="w-4 h-4" />
                 </div>
                 <a href="mailto:tamjidulislamsamim@gmail.com" className="hover:text-cyan-300 transition-colors truncate">
                   tamjidulislamsamim@gmail.com
                 </a>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
-                  <Phone className="w-4 h-4" />
+              <div className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-emerald-500/50 group-hover:scale-105 transition-all">
+                  <IMessageIcon className="w-4.5 h-4.5" fill="#34DA50" />
                 </div>
-                <a href="tel:+8801782938883" className="hover:text-cyan-300 transition-colors">
-                  +880 1782-938883
+                <a href="tel:+8801782938883" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                  <span>+880 1782-938883</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">iMessage</span>
                 </a>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
-                  <MapPin className="w-4 h-4" />
+              <div className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-cyan-400/50 group-hover:scale-105 transition-all">
+                  <AzureLocationIcon className="w-4.5 h-4.5" />
                 </div>
-                <span>Dhaka, Bangladesh</span>
+                <span className="group-hover:text-cyan-300 transition-colors">Dhaka, Bangladesh</span>
               </div>
             </div>
 
             {/* Social Media Buttons */}
-            <div className="flex items-center gap-3 pt-2">
-              <a
-                href="https://github.com/samim"
-                target="_blank"
-                rel="noreferrer"
-                title="GitHub Profile"
-                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/md-samim5669/"
-                target="_blank"
-                rel="noreferrer"
-                title="LinkedIn Profile"
-                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="mailto:tamjidulislamsamim@gmail.com"
-                title="Send Email"
-                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] hover:scale-110 transition-all duration-300"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
+            <div className="pt-2">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Social Profiles
+              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <a
+                  href="https://github.com/samim"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="GitHub Profile"
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-110 transition-all duration-300"
+                >
+                  <GithubIcon className="w-4 h-4 text-white" />
+                </a>
+
+                <a
+                  href="https://www.linkedin.com/in/md-samim5669/"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="LinkedIn Profile"
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(10,102,194,0.5)] hover:scale-110 transition-all duration-300"
+                >
+                  <LinkedinIcon className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Facebook Profile"
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-blue-600 hover:shadow-[0_0_15px_rgba(8,102,255,0.5)] hover:scale-110 transition-all duration-300"
+                >
+                  <FacebookIcon className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="mailto:tamjidulislamsamim@gmail.com"
+                  title="Google / Gmail"
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-red-400 hover:shadow-[0_0_15px_rgba(234,67,53,0.4)] hover:scale-110 transition-all duration-300"
+                >
+                  <GoogleIcon className="w-4 h-4" />
+                </a>
+
+                <a
+                  href="sms:+8801782938883"
+                  title="iMessage / SMS"
+                  className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,218,80,0.4)] hover:scale-110 transition-all duration-300"
+                >
+                  <IMessageIcon className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
