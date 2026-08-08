@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import { GitCommit, Sparkles, Activity } from 'lucide-react';
+import { GitCommit } from 'lucide-react';
 
 const DAY = 86400000;
 
@@ -40,158 +40,165 @@ export const SkillActivityChart = ({ skills = [], initialSeries }) => {
     return generateCommitSeries(skills);
   }, [skills, initialSeries]);
 
-  const [totalCommits, setTotalCommits] = useState(() => {
+  const initialTotal = useMemo(() => {
     return commitSeries.reduce((acc, curr) => acc + (curr.y || 0), 0);
-  });
+  }, [commitSeries]);
 
-  const now = new Date().getTime();
-  const defaultMinX = now - 180 * DAY; // Default 6 month zoom range
+  const [totalCommits, setTotalCommits] = useState(initialTotal);
 
-  const mainChartOptions = {
-    chart: {
-      id: 'chartyear',
-      type: 'area',
-      height: 180,
-      background: 'transparent',
-      toolbar: {
-        show: false,
-        autoSelected: 'pan',
-      },
-      events: {
-        mounted: function (chart) {
-          if (chart && chart.w) {
-            const total = chart.getSeriesTotalXRange(
-              chart.w.globals.minX,
-              chart.w.globals.maxX
-            );
-            setTotalCommits(total || 0);
-          }
+  const now = useMemo(() => new Date().getTime(), []);
+  const defaultMinX = useMemo(() => now - 180 * DAY, [now]);
+
+  const handleUpdate = useCallback((chart) => {
+    if (chart && chart.w && chart.w.globals) {
+      const total = chart.getSeriesTotalXRange(
+        chart.w.globals.minX,
+        chart.w.globals.maxX
+      );
+      if (typeof total === 'number') {
+        setTotalCommits((prev) => (prev !== total ? total : prev));
+      }
+    }
+  }, []);
+
+  const mainChartOptions = useMemo(() => {
+    return {
+      chart: {
+        id: 'chartyear',
+        type: 'area',
+        height: 180,
+        background: 'transparent',
+        toolbar: {
+          show: false,
+          autoSelected: 'pan',
         },
-        updated: function (chart) {
-          if (chart && chart.w) {
-            const total = chart.getSeriesTotalXRange(
-              chart.w.globals.minX,
-              chart.w.globals.maxX
-            );
-            setTotalCommits(total || 0);
-          }
+        animations: {
+          enabled: true,
+          speed: 300,
+        },
+        events: {
+          mounted: handleUpdate,
+          updated: handleUpdate,
         },
       },
-    },
-    colors: ['#06b6d4'], // Cyan glow
-    stroke: {
-      width: 2,
-      curve: 'monotoneCubic',
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.6,
-        opacityTo: 0.05,
-        stops: [0, 90, 100],
+      colors: ['#06b6d4'],
+      stroke: {
+        width: 2,
+        curve: 'monotoneCubic',
       },
-    },
-    markers: {
-      size: 0,
-      hover: {
-        size: 5,
+      dataLabels: {
+        enabled: false,
       },
-    },
-    grid: {
-      borderColor: 'rgba(51, 65, 85, 0.4)',
-      strokeDashArray: 4,
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.6,
+          opacityTo: 0.05,
+          stops: [0, 90, 100],
+        },
+      },
+      markers: {
+        size: 0,
+        hover: {
+          size: 5,
+        },
+      },
+      grid: {
+        borderColor: 'rgba(51, 65, 85, 0.4)',
+        strokeDashArray: 4,
+        yaxis: {
+          lines: { show: true },
+        },
+        xaxis: {
+          lines: { show: false },
+        },
+      },
       yaxis: {
-        lines: { show: true },
+        show: true,
+        labels: {
+          style: { colors: '#94a3b8', fontSize: '11px' },
+        },
       },
       xaxis: {
-        lines: { show: false },
+        type: 'datetime',
+        labels: {
+          format: 'MMM yyyy',
+          style: { colors: '#94a3b8', fontSize: '11px' },
+        },
+        axisBorder: { color: 'rgba(51, 65, 85, 0.6)' },
+        axisTicks: { color: 'rgba(51, 65, 85, 0.6)' },
       },
-    },
-    yaxis: {
-      show: true,
-      labels: {
-        style: { colors: '#94a3b8', fontSize: '11px' },
+      tooltip: {
+        theme: 'dark',
+        x: { format: 'dd MMM yyyy' },
       },
-    },
-    xaxis: {
-      type: 'datetime',
-      labels: {
-        format: 'MMM yyyy',
-        style: { colors: '#94a3b8', fontSize: '11px' },
-      },
-      axisBorder: { color: 'rgba(51, 65, 85, 0.6)' },
-      axisTicks: { color: 'rgba(51, 65, 85, 0.6)' },
-    },
-    tooltip: {
-      theme: 'dark',
-      x: { format: 'dd MMM yyyy' },
-    },
-  };
+    };
+  }, [handleUpdate]);
 
-  const brushChartOptions = {
-    chart: {
-      height: 130,
-      type: 'area',
-      background: 'transparent',
-      toolbar: {
-        show: false,
-        autoSelected: 'selection',
-      },
-      brush: {
-        enabled: true,
-        target: 'chartyear',
-      },
-      selection: {
-        enabled: true,
-        xaxis: {
-          min: defaultMinX,
-          max: now,
+  const brushChartOptions = useMemo(() => {
+    return {
+      chart: {
+        id: 'chartyears',
+        height: 130,
+        type: 'area',
+        background: 'transparent',
+        toolbar: {
+          show: false,
+          autoSelected: 'selection',
+        },
+        brush: {
+          enabled: true,
+          target: 'chartyear',
+        },
+        selection: {
+          enabled: true,
+          xaxis: {
+            min: defaultMinX,
+            max: now,
+          },
         },
       },
-    },
-    colors: ['#10b981'], // Emerald green
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      width: 1.5,
-      curve: 'monotoneCubic',
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        opacityFrom: 0.4,
-        opacityTo: 0.05,
+      colors: ['#10b981'],
+      dataLabels: {
+        enabled: false,
       },
-    },
-    grid: {
-      borderColor: 'rgba(51, 65, 85, 0.3)',
-      yaxis: { lines: { show: false } },
-    },
-    yaxis: {
-      show: false,
-    },
-    xaxis: {
-      type: 'datetime',
-      labels: {
-        format: 'MMM yyyy',
-        style: { colors: '#64748b', fontSize: '10px' },
+      stroke: {
+        width: 1.5,
+        curve: 'monotoneCubic',
       },
-      axisBorder: { show: false },
-      axisTicks: { show: false },
-    },
-  };
+      fill: {
+        type: 'gradient',
+        gradient: {
+          opacityFrom: 0.4,
+          opacityTo: 0.05,
+        },
+      },
+      grid: {
+        borderColor: 'rgba(51, 65, 85, 0.3)',
+        yaxis: { lines: { show: false } },
+      },
+      yaxis: {
+        show: false,
+      },
+      xaxis: {
+        type: 'datetime',
+        labels: {
+          format: 'MMM yyyy',
+          style: { colors: '#64748b', fontSize: '10px' },
+        },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+      },
+    };
+  }, [defaultMinX, now]);
 
-  const seriesData = [
+  const seriesData = useMemo(() => [
     {
       name: 'Commits & Activity',
       data: commitSeries,
     },
-  ];
+  ], [commitSeries]);
 
   return (
     <div className="w-full bg-slate-950/90 border border-cyan-500/30 rounded-3xl p-5 sm:p-7 shadow-[0_0_40px_rgba(6,182,212,0.15)] backdrop-blur-xl">
@@ -243,4 +250,4 @@ export const SkillActivityChart = ({ skills = [], initialSeries }) => {
   );
 };
 
-export default SkillActivityChart;
+export default React.memo(SkillActivityChart);

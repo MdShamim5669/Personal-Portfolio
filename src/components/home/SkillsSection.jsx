@@ -233,21 +233,12 @@ export const SkillsSection = ({ skills = [] }) => {
       </div>
 
       {/* Category Mastery ApexChart (Driven by activeCategory tabs above) */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeCategory}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }}
-          transition={{ duration: 0.25 }}
-          className="mb-8"
-        >
-          <SkillCategoryChart
-            categoryTitle={activeCategoryObj.label}
-            skillsData={activeCategorySkills}
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div className="mb-8">
+        <SkillCategoryChart
+          categoryTitle={activeCategoryObj.label}
+          skillsData={activeCategorySkills}
+        />
+      </div>
 
       {/* Repository & Skill Commit Activity Timeline Chart */}
       <div className="mt-8">
