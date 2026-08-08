@@ -9,71 +9,12 @@ import Card from '../ui/Card';
 import ElectricBorder from '../ui/ElectricBorder';
 import TypingHeading from '../ui/TypingHeading';
 
-const DEFAULT_PROJECTS = [
-  {
-    id: 'p1',
-    title: 'Enterprise Multi-Vendor E-Commerce Platform',
-    tagline: 'High-Scale Retail & Payment Infrastructure',
-    description: 'A full-stack multi-tenant e-commerce ecosystem featuring vendor management, Stripe Connect payment integration, real-time inventory tracking, and custom admin analytics dashboard.',
-    techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Redux Toolkit', 'Stripe API'],
-    isFeatured: true,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1556742049-0a6756595316?auto=format&fit=crop&w=1000&q=80',
-    clientGithubUrl: 'https://github.com',
-    serverGithubUrl: 'https://github.com',
-    liveDemoUrl: 'https://demo.com',
-  },
-  {
-    id: 'p2',
-    title: 'AI Resume & Cover Letter Architect',
-    tagline: 'Generative AI Career Tools',
-    description: 'An AI-driven SaaS platform that leverages OpenAI GPT-4 models to auto-tailor software developer resumes, generate targeted cover letters, and score ATS optimization in seconds.',
-    techStack: ['Next.js', 'OpenAI API', 'TypeScript', 'Tailwind CSS', 'Prisma', 'PostgreSQL'],
-    isFeatured: true,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=1000&q=80',
-    clientGithubUrl: 'https://github.com',
-    serverGithubUrl: 'https://github.com',
-    liveDemoUrl: 'https://demo.com',
-  },
-  {
-    id: 'p3',
-    title: 'Real-Time Team Collaboration Suite',
-    tagline: 'WebSocket Distributed Workspace',
-    description: 'Collaborative task canvas with real-time cursor tracking, live document editing, interactive kanban boards, and instant notification distribution built on WebSocket architecture.',
-    techStack: ['React', 'Socket.io', 'Node.js', 'Redis', 'Docker', 'Tailwind CSS'],
-    isFeatured: false,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
-    clientGithubUrl: 'https://github.com',
-    serverGithubUrl: 'https://github.com',
-    liveDemoUrl: 'https://demo.com',
-  },
-  {
-    id: 'p4',
-    title: 'Smart Telemedicine & Clinical Portal',
-    tagline: 'Healthcare Management & WebRTC Video',
-    description: 'HIPAA-aligned healthcare scheduling & video consultation system featuring WebRTC live calls, patient electronic health records (EHR), and automated SMS reminders.',
-    techStack: ['React', 'WebRTC', 'Express.js', 'MongoDB', 'Firebase Auth', 'Tailwind CSS'],
-    isFeatured: false,
-    thumbnailUrl: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=80',
-    clientGithubUrl: 'https://github.com',
-    serverGithubUrl: 'https://github.com',
-    liveDemoUrl: 'https://demo.com',
-  },
-];
-
 export const ProjectsSection = ({ projects = [] }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
 
-  // Merge API projects with default projects to ensure rich list & active pagination controls
-  const combinedProjects = [...projects];
-  DEFAULT_PROJECTS.forEach((def) => {
-    if (!combinedProjects.some((p) => p.title?.toLowerCase() === def.title?.toLowerCase())) {
-      combinedProjects.push(def);
-    }
-  });
-
-  const allProjects = combinedProjects;
+  const allProjects = projects;
   const totalPages = Math.max(1, Math.ceil(allProjects.length / itemsPerPage));
 
   // Handle page boundaries if projects change
