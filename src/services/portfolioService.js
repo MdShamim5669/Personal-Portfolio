@@ -8,7 +8,6 @@ export const portfolioService = {
   getThesis: () => api.get('/thesis'),
   getCourses: () => api.get('/courses'),
   getExperiences: () => api.get('/experience'),
-  getCampusMoments: () => api.get('/campus-moments'),
   sendMessage: (payload) => api.post('/messages', payload),
 
   // Auth & Admin
@@ -33,16 +32,6 @@ export const portfolioService = {
 
   createExperience: (data) => api.post('/experience', data),
   deleteExperience: (id) => api.delete(`/experience/${id}`),
-
-  createCampusMoment: (formData) =>
-    api.post('/campus-moments', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-  updateCampusMoment: (id, formData) =>
-    api.put(`/campus-moments/${id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-  deleteCampusMoment: (id) => api.delete(`/campus-moments/${id}`),
 
   getMessages: () => api.get('/messages'),
   deleteMessage: (id) => api.delete(`/messages/${id}`),
