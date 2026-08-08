@@ -65,7 +65,15 @@ export const ProjectsSection = ({ projects = [] }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
 
-  const allProjects = projects.length > 0 ? projects : DEFAULT_PROJECTS;
+  // Merge API projects with default projects to ensure rich list & active pagination controls
+  const combinedProjects = [...projects];
+  DEFAULT_PROJECTS.forEach((def) => {
+    if (!combinedProjects.some((p) => p.title?.toLowerCase() === def.title?.toLowerCase())) {
+      combinedProjects.push(def);
+    }
+  });
+
+  const allProjects = combinedProjects;
   const totalPages = Math.max(1, Math.ceil(allProjects.length / itemsPerPage));
 
   // Handle page boundaries if projects change

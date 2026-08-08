@@ -91,7 +91,14 @@ export const ProjectsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const allProjects = projects.length > 0 ? projects : DEFAULT_PROJECTS;
+  const combinedProjects = [...projects];
+  DEFAULT_PROJECTS.forEach((def) => {
+    if (!combinedProjects.some((p) => p.title?.toLowerCase() === def.title?.toLowerCase())) {
+      combinedProjects.push(def);
+    }
+  });
+
+  const allProjects = combinedProjects;
 
   const filteredProjects = allProjects.filter((proj) => {
     const q = searchQuery.toLowerCase();
