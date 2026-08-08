@@ -38,11 +38,15 @@ export const ProjectsPage = () => {
       <main className="flex-1 py-16 px-4 lg:px-8 max-w-7xl mx-auto w-full">
         {/* Back Button */}
         <div className="mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400/50 text-xs font-semibold transition-all hover:-translate-x-1 shadow-lg"
-          >
-            <ArrowLeft className="w-4 h-4 text-cyan-400" /> Back to Portfolio Home
+          <Link to="/">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="rounded-full bg-slate-900/90 border-slate-800 hover:border-cyan-500/50 text-slate-300 hover:text-white px-4 py-2 shadow-lg backdrop-blur-xl group"
+            >
+              <ArrowLeft className="w-4 h-4 text-cyan-400 group-hover:-translate-x-1 transition-transform duration-300" />
+              <span>Back</span>
+            </Button>
           </Link>
         </div>
 

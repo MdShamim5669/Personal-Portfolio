@@ -50,12 +50,15 @@ export const ProjectsSection = ({ projects = [] }) => {
               Full-stack web platforms engineered with role-based access control, Stripe payment gateways, and real-time APIs.
             </p>
             {/* See More Button */}
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 hover:from-cyan-500/30 hover:to-indigo-500/30 border border-cyan-400/30 text-cyan-300 hover:text-white text-xs font-bold transition-all shadow-md shadow-cyan-500/10 shrink-0 hover:scale-[1.03]"
-            >
-              <span>See More Projects</span>
-              <ArrowRight className="w-4 h-4 text-cyan-400" />
+            <Link to="/projects" className="shrink-0">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="rounded-xl bg-slate-900/90 border-slate-800 hover:border-cyan-500/50 text-slate-200 hover:text-white px-4 py-2.5 shadow-md backdrop-blur-md group"
+              >
+                <span>See More Projects</span>
+                <ArrowRight className="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
             </Link>
           </div>
         </div>
