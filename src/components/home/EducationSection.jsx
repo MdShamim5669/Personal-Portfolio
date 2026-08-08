@@ -1,55 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, Calendar, Image as ImageIcon, Sparkles, ZoomIn, MapPin, Award, BookOpen, Layers } from 'lucide-react';
+import { GraduationCap, Calendar, Image as ImageIcon, Sparkles, ZoomIn, MapPin, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
 import Modal from '../ui/Modal';
 import Badge from '../ui/Badge';
-import Card from '../ui/Card';
 import ChromaGrid from '../ui/ChromaGrid';
 
-export const EducationSection = ({ profile, educationPhotos = [] }) => {
+export const EducationSection = ({ profile, campusMoments = [], educationPhotos = [] }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [activePhotoIdx, setActivePhotoIdx] = useState(0);
 
-  // Default campus/university memories if none provided from admin
-  const defaultPhotos = [
+  // Default campus/university memories if none provided from admin/backend
+  const defaultMoments = [
     {
-      id: 1,
+      id: '1',
       title: 'DIU Main Campus & Academic Building',
       category: 'Campus Life',
-      imageUrl: 'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=1200&q=80',
+      imageUrls: [
+        'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80',
+      ],
       description: 'Studying and collaborating at Daffodil International University Smart Campus.',
     },
     {
-      id: 2,
+      id: '2',
       title: 'CSE Project Fair & Research Seminar',
       category: 'Research & Events',
-      imageUrl: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1200&q=80',
+      imageUrls: [
+        'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
+      ],
       description: 'Presenting machine learning research models and full-stack software applications.',
     },
     {
-      id: 3,
+      id: '3',
       title: 'Academic Excellence & Graduation Milestone',
       category: 'Milestones',
-      imageUrl: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+      imageUrls: [
+        'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+      ],
       description: 'Celebrating 4 years of Computer Science & Engineering journey with honors.',
     },
   ];
 
-  const photosList = educationPhotos.length > 0 ? educationPhotos : defaultPhotos;
-  const featuredPhotoUrl = profile?.educationPicUrl || photosList[0]?.imageUrl;
+  const momentsList = useMemo(() => {
+    if (campusMoments && campusMoments.length > 0) return campusMoments;
+    if (educationPhotos && educationPhotos.length > 0) return educationPhotos;
+    return defaultMoments;
+  }, [campusMoments, educationPhotos]);
 
-  const chromaItems = photosList.map((photo, index) => {
+  const featuredPhotoUrl =
+    profile?.educationPicUrl ||
+    (momentsList[0]?.imageUrls?.[0] || momentsList[0]?.imageUrl);
+
+  const chromaItems = momentsList.map((photo, index) => {
     const colors = [
-      '#06B6D4', '#6366F1', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'
+      '#06B6D4', '#6366F1', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899',
     ];
     const color = colors[index % colors.length];
+    const images = photo.imageUrls || (photo.imageUrl ? [photo.imageUrl] : []);
+    const coverImage =
+      images[0] ||
+      'https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=1200&q=80';
+
     return {
-      image: photo.imageUrl,
+      image: coverImage,
       title: photo.title,
-      subtitle: photo.category,
+      subtitle: `${photo.category} ${images.length > 1 ? `(${images.length} Photos)` : ''}`,
       borderColor: color,
       gradient: `linear-gradient(145deg, ${color}70, rgba(15, 23, 42, 0.95))`,
-      onClick: () => setSelectedPhoto(photo)
+      onClick: () => {
+        setSelectedPhoto({ ...photo, images });
+        setActivePhotoIdx(0);
+      },
     };
   });
 
@@ -65,13 +88,13 @@ export const EducationSection = ({ profile, educationPhotos = [] }) => {
           <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-400 text-xs font-bold uppercase tracking-wider">
             <GraduationCap className="w-4 h-4 text-cyan-400" /> Academic Background
           </span>
-          
+
           <TypingHeading 
             text="Education & Campus Life" 
             highlightText="Campus Life"
             className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight" 
           />
-          
+
           <p className="text-slate-400 text-sm leading-relaxed max-w-2xl mx-auto">
             Higher education milestones, academic honors, specialized coursework background, and memorable university moments.
           </p>
@@ -136,7 +159,15 @@ export const EducationSection = ({ profile, educationPhotos = [] }) => {
                   <motion.div
                     whileHover={{ scale: 1.03, y: -4 }}
                     transition={{ duration: 0.3 }}
-                    onClick={() => setSelectedPhoto({ title: profile?.university || 'DIU Campus', category: 'Campus Life', imageUrl: featuredPhotoUrl, description: `Academic & Campus Life at Daffodil International University.` })}
+                    onClick={() => {
+                      setSelectedPhoto({
+                        title: profile?.university || 'DIU Campus',
+                        category: 'Campus Life',
+                        images: [featuredPhotoUrl],
+                        description: `Academic & Campus Life at Daffodil International University.`,
+                      });
+                      setActivePhotoIdx(0);
+                    }}
                     className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 hover:border-cyan-400/60 shadow-2xl group cursor-pointer"
                   >
                     <img
@@ -187,23 +218,73 @@ export const EducationSection = ({ profile, educationPhotos = [] }) => {
           </div>
         </div>
 
-        {/* PHOTO LIGHTBOX MODAL */}
+        {/* PHOTO LIGHTBOX MODAL WITH MULTI-PHOTO SUPPORT */}
         <Modal
           isOpen={!!selectedPhoto}
-          onClose={() => setSelectedPhoto(null)}
+          onClose={() => {
+            setSelectedPhoto(null);
+            setActivePhotoIdx(0);
+          }}
           title={selectedPhoto?.title}
           subtitle={selectedPhoto?.category}
           maxWidth="max-w-4xl"
         >
           {selectedPhoto && (
             <div className="space-y-4">
-              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center shadow-xl">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center shadow-xl group">
                 <img
-                  src={selectedPhoto.imageUrl}
+                  src={selectedPhoto.images?.[activePhotoIdx] || selectedPhoto.imageUrl}
                   alt={selectedPhoto.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-all duration-300"
                 />
+
+                {/* Multi-Photo Left/Right Nav Buttons */}
+                {selectedPhoto.images?.length > 1 && (
+                  <>
+                    <button
+                      onClick={() =>
+                        setActivePhotoIdx((prev) =>
+                          prev === 0 ? selectedPhoto.images.length - 1 : prev - 1
+                        )
+                      }
+                      className="absolute left-3 p-2.5 rounded-full bg-slate-900/80 border border-slate-700 text-white hover:bg-cyan-500 hover:border-cyan-400 transition-all shadow-lg"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        setActivePhotoIdx((prev) =>
+                          prev === selectedPhoto.images.length - 1 ? 0 : prev + 1
+                        )
+                      }
+                      className="absolute right-3 p-2.5 rounded-full bg-slate-900/80 border border-slate-700 text-white hover:bg-cyan-500 hover:border-cyan-400 transition-all shadow-lg"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
               </div>
+
+              {/* Multi-Photo Thumbnails Strip */}
+              {selectedPhoto.images?.length > 1 && (
+                <div className="flex items-center gap-3 overflow-x-auto py-2">
+                  {selectedPhoto.images.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActivePhotoIdx(i)}
+                      className={`relative w-20 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
+                        activePhotoIdx === i
+                          ? 'border-cyan-400 scale-105 shadow-[0_0_15px_rgba(6,182,212,0.6)]'
+                          : 'border-slate-800 opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={img} alt={`Thumb ${i}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {selectedPhoto.description && (
                 <p className="text-sm text-slate-300 leading-relaxed pt-2">
                   {selectedPhoto.description}

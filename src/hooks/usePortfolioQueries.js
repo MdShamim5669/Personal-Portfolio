@@ -9,6 +9,7 @@ export const QUERY_KEYS = {
   thesis: ['thesis'],
   courses: ['courses'],
   experiences: ['experiences'],
+  campusMoments: ['campusMoments'],
   messages: ['messages'],
 };
 
@@ -74,6 +75,17 @@ export function useExperiencesQuery() {
     queryKey: QUERY_KEYS.experiences,
     queryFn: async () => {
       const res = await portfolioService.getExperiences();
+      return res.data?.data || res.data || [];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+export function useCampusMomentsQuery() {
+  return useQuery({
+    queryKey: QUERY_KEYS.campusMoments,
+    queryFn: async () => {
+      const res = await portfolioService.getCampusMoments();
       return res.data?.data || res.data || [];
     },
     staleTime: 1000 * 60 * 5,

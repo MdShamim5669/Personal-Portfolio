@@ -17,6 +17,7 @@ import {
   useThesisQuery,
   useCoursesQuery,
   useExperiencesQuery,
+  useCampusMomentsQuery,
 } from '../hooks/usePortfolioQueries';
 
 export const HomePage = () => {
@@ -26,6 +27,7 @@ export const HomePage = () => {
   const { data: thesis, isLoading: thesisLoading } = useThesisQuery();
   const { data: courses = [], isLoading: coursesLoading } = useCoursesQuery();
   const { data: experiences = [], isLoading: expLoading } = useExperiencesQuery();
+  const { data: campusMoments = [] } = useCampusMomentsQuery();
 
   const isLoading = profileLoading || skillsLoading || projectsLoading || thesisLoading || coursesLoading || expLoading;
 
@@ -44,7 +46,7 @@ export const HomePage = () => {
         </AnimatedContent>
 
         <AnimatedContent distance={100} duration={1} ease="power3.out" initialOpacity={0}>
-          <EducationSection profile={profile} />
+          <EducationSection profile={profile} campusMoments={campusMoments} />
         </AnimatedContent>
 
         <AnimatedContent distance={100} duration={1} ease="power3.out" initialOpacity={0}>
