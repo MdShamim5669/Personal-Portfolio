@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Code, Cpu, Database, Layers, Wrench, Sparkles, Sliders, ExternalLink, X, ArrowLeft, CheckCircle2, GitFork, BarChart3 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
-import SkillActivityChart from '../ui/SkillActivityChart';
-import SkillCategoryChart from '../ui/SkillCategoryChart';
 
 import claudeLogo from '../../../Docs/tech-logos/claude-ai.png';
 import cloudinaryLogo from '../../../Docs/tech-logos/cloudinary.png';
@@ -98,26 +96,8 @@ export const SkillsSection = ({ skills = [] }) => {
     ],
   };
 
+  const currentItems = categorySkillData[activeCategory] || categorySkillData.LANGUAGES;
   const activeCategoryObj = categories.find((c) => c.id === activeCategory) || categories[0];
-
-  // Helper to extract skills for selected category dynamically from props or fallback
-  const getSkillsForCategory = (catId) => {
-    const fromProps = skills.filter((s) => s.category?.toUpperCase() === catId.toUpperCase());
-    if (fromProps.length > 0) {
-      return fromProps.map((s) => ({
-        name: s.name,
-        proficiency: s.proficiency || 85,
-        category: s.category,
-      }));
-    }
-    return (categorySkillData[catId] || []).map((s) => ({
-      name: s.name,
-      proficiency: s.rightVal || s.leftVal || 90,
-      category: catId,
-    }));
-  };
-
-  const activeCategorySkills = getSkillsForCategory(activeCategory);
 
   // Ribbon Colors matching Left Image (Purple, Cyan, Yellow, Orange, Emerald)
   const ribbonColors = [
@@ -232,17 +212,182 @@ export const SkillsSection = ({ skills = [] }) => {
         })}
       </div>
 
-      {/* Category Mastery ApexChart (Driven by activeCategory tabs above) */}
-      <div className="mb-8">
-        <SkillCategoryChart
-          categoryTitle={activeCategoryObj.label}
-          skillsData={activeCategorySkills}
-        />
-      </div>
+      {/* FIXED HEIGHT CHARTS CONTAINER WRAPPED IN AMBER/GOLD BORDER */}
+      <div className="border border-amber-400/50 rounded-2xl bg-slate-950/90 shadow-[0_0_30px_rgba(245,158,11,0.15)] overflow-hidden p-4 sm:p-6 h-[340px] flex flex-col justify-between">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-amber-400/30 items-stretch h-full gap-y-4 lg:gap-y-0"
+          >
+            {/* LEFT CHART: SANKEY FLOW DIAGRAM WITH GLOWING ARROW CONNECTORS */}
+            <div className="lg:col-span-6 flex flex-col justify-between h-full lg:pr-6 space-y-2">
+              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  <GitFork className="w-3.5 h-3.5 text-cyan-400" /> {activeCategoryObj.label} Sankey Flow Diagram
+                </span>
+                <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider">
+                  Inputs &rarr; Architecture
+                </span>
+              </div>
 
-      {/* Repository & Skill Commit Activity Timeline Chart */}
-      <div className="mt-8">
-        <SkillActivityChart skills={skills} />
+              {/* Interactive SVG Sankey Diagram */}
+              <div className="flex-1 w-full h-full min-h-0 flex items-center justify-center relative py-1">
+                <svg viewBox="0 0 400 220" className="w-full h-full overflow-visible">
+                  <defs>
+                    <marker
+                      id="sankeyArrow"
+                      viewBox="0 0 10 10"
+                      refX="6"
+                      refY="5"
+                      markerWidth="6"
+                      markerHeight="6"
+                      orient="auto-start-reverse"
+                    >
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4" />
+                    </marker>
+                    {ribbonColors.map((c, i) => (
+                      <linearGradient key={i} id={`sankeyGrad${i}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor={c.start} stopOpacity="0.9" />
+                        <stop offset="100%" stopColor={c.end} stopOpacity="0.9" />
+                      </linearGradient>
+                    ))}
+                  </defs>
+
+                  {/* Render 5 Ribbon Curves & Arrow Signs */}
+                  {currentItems.map((item, i) => {
+                    const yStart = 15 + i * 38;
+                    const yEnd = 15 + i * 38;
+                    const h = 24;
+                    const colorObj = ribbonColors[i % ribbonColors.length];
+
+                    return (
+                      <g key={item.name} className="group cursor-pointer">
+                        {/* Fluid Curved Connecting Line with Arrowhead */}
+                        <path
+                          d={`M 85 ${yStart + h / 2} C 190 ${yStart + h / 2}, 210 ${yEnd + h / 2}, 312 ${yEnd + h / 2}`}
+                          fill="none"
+                          stroke={colorObj.fill}
+                          strokeWidth="4"
+                          strokeDasharray="6 3"
+                          strokeOpacity="0.85"
+                          markerEnd="url(#sankeyArrow)"
+                          className="transition-all duration-300 group-hover:stroke-width-6 group-hover:stroke-opacity-100"
+                        />
+
+                        {/* Left Node Bar & Label */}
+                        <rect
+                          x="5"
+                          y={yStart}
+                          width="80"
+                          height={h}
+                          rx="6"
+                          fill={colorObj.fill}
+                          opacity="0.95"
+                          className="transition-all group-hover:brightness-125 shadow-lg"
+                        />
+                        <text
+                          x="45"
+                          y={yStart + 16}
+                          fill="#ffffff"
+                          fontSize="10"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          className="pointer-events-none font-sans drop-shadow"
+                        >
+                          {item.name}
+                        </text>
+
+                        {/* Right Node Bar & Label */}
+                        <rect
+                          x="315"
+                          y={yEnd}
+                          width="80"
+                          height={h}
+                          rx="6"
+                          fill={colorObj.fill}
+                          opacity="0.95"
+                          className="transition-all group-hover:brightness-125 shadow-lg"
+                        />
+                        <text
+                          x="355"
+                          y={yEnd + 16}
+                          fill="#ffffff"
+                          fontSize="9.5"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          className="pointer-events-none font-sans drop-shadow"
+                        >
+                          {item.target}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </div>
+
+            {/* RIGHT CHART: DIVERGING BAR SPECTRUM (VIBRANT AMBER & BLUE FILLS) */}
+            <div className="lg:col-span-6 flex flex-col justify-between h-full pt-4 lg:pt-0 lg:pl-6 space-y-2">
+              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5 text-amber-400" /> Competency Diverging Spectrum
+                </span>
+                <div className="flex items-center gap-3 text-[10px] font-bold">
+                  <span className="text-amber-400">Theory / Foundation</span>
+                  <span className="text-blue-400">Production Execution</span>
+                </div>
+              </div>
+
+              {/* 5 Center-Diverging Rows */}
+              <div className="flex-1 flex flex-col justify-between gap-1.5 py-1">
+                {currentItems.map((item) => (
+                  <div key={item.name} className="flex items-center gap-2 group cursor-pointer">
+                    {/* Technology Label */}
+                    <span className="w-20 text-[11px] font-bold text-slate-300 truncate group-hover:text-amber-300 transition-colors">
+                      {item.name}
+                    </span>
+
+                    {/* Diverging Bar Track */}
+                    <div className="flex-1 h-7 relative bg-slate-900/90 rounded-lg border border-slate-800/80 flex items-center px-1">
+                      {/* Center Axis Line */}
+                      <div className="absolute left-1/2 top-0 bottom-0 w-[1.5px] bg-slate-700 z-20" />
+
+                      {/* Left Bar (Amber #f59e0b) extending leftward from center line */}
+                      <div className="w-1/2 flex items-center justify-end h-full pr-0.5 relative">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.leftVal}%` }}
+                          transition={{ duration: 0.6 }}
+                          className="h-3.5 bg-gradient-to-l from-amber-400 via-amber-500 to-amber-600 rounded-l-md relative flex items-center justify-start shadow-[0_0_10px_rgba(245,158,11,0.5)] group-hover:brightness-125 transition-all"
+                        >
+                          {/* Grey Capsule Pill at left end */}
+                          <div className="absolute -left-1.5 w-3 h-1.5 rounded-full bg-slate-300 border border-slate-900 shadow" />
+                        </motion.div>
+                      </div>
+
+                      {/* Right Bar (Electric Blue #3b82f6) extending rightward from center line */}
+                      <div className="w-1/2 flex items-center justify-start h-full pl-0.5 relative">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.rightVal}%` }}
+                          transition={{ duration: 0.6 }}
+                          className="h-3.5 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-600 rounded-r-md relative flex items-center justify-end shadow-[0_0_10px_rgba(59,130,246,0.5)] group-hover:brightness-125 transition-all"
+                        >
+                          {/* Grey Capsule Pill at right end */}
+                          <div className="absolute -right-1.5 w-3 h-1.5 rounded-full bg-slate-300 border border-slate-900 shadow" />
+                        </motion.div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Large Interactive 3D Skill Detail Modal Window */}
@@ -320,3 +465,5 @@ export const SkillsSection = ({ skills = [] }) => {
     </section>
   );
 };
+
+export default SkillsSection;
