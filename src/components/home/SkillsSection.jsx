@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Code, Cpu, Database, Layers, Wrench, Sparkles, Sliders, ExternalLink, X, ArrowLeft, CheckCircle2, GitFork, BarChart3 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
 import SkillActivityChart from '../ui/SkillActivityChart';
+import SkillCategoryChart from '../ui/SkillCategoryChart';
 
 import claudeLogo from '../../../Docs/tech-logos/claude-ai.png';
 import cloudinaryLogo from '../../../Docs/tech-logos/cloudinary.png';
@@ -97,8 +98,26 @@ export const SkillsSection = ({ skills = [] }) => {
     ],
   };
 
-  const currentItems = categorySkillData[activeCategory] || categorySkillData.LANGUAGES;
   const activeCategoryObj = categories.find((c) => c.id === activeCategory) || categories[0];
+
+  // Helper to extract skills for selected category dynamically from props or fallback
+  const getSkillsForCategory = (catId) => {
+    const fromProps = skills.filter((s) => s.category?.toUpperCase() === catId.toUpperCase());
+    if (fromProps.length > 0) {
+      return fromProps.map((s) => ({
+        name: s.name,
+        proficiency: s.proficiency || 85,
+        category: s.category,
+      }));
+    }
+    return (categorySkillData[catId] || []).map((s) => ({
+      name: s.name,
+      proficiency: s.rightVal || s.leftVal || 90,
+      category: catId,
+    }));
+  };
+
+  const activeCategorySkills = getSkillsForCategory(activeCategory);
 
   // Ribbon Colors matching Left Image (Purple, Cyan, Yellow, Orange, Emerald)
   const ribbonColors = [
@@ -213,8 +232,25 @@ export const SkillsSection = ({ skills = [] }) => {
         })}
       </div>
 
-      {/* Dynamic Skill Commit & Activity Chart with Range Brush */}
-      <div className="mt-4">
+      {/* Category Mastery ApexChart (Driven by activeCategory tabs above) */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeCategory}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.25 }}
+          className="mb-8"
+        >
+          <SkillCategoryChart
+            categoryTitle={activeCategoryObj.label}
+            skillsData={activeCategorySkills}
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Repository & Skill Commit Activity Timeline Chart */}
+      <div className="mt-8">
         <SkillActivityChart skills={skills} />
       </div>
 
