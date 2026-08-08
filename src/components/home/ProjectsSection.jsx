@@ -9,12 +9,83 @@ import Card from '../ui/Card';
 import ElectricBorder from '../ui/ElectricBorder';
 import TypingHeading from '../ui/TypingHeading';
 
+const DEFAULT_PROJECTS = [
+  {
+    id: 'def-1',
+    title: 'SaFus Restaurant Management System',
+    tagline: 'Full-Stack MERN Food Ordering Platform',
+    description: 'A comprehensive multi-role restaurant web application supporting online food ordering, real-time cart tracking, Stripe payment gateway, and an interactive Admin/Manager Dashboard for order fulfillment.',
+    techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Stripe'],
+    liveDemoUrl: 'https://safus-restaurant.web.app',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+  {
+    id: 'def-2',
+    title: 'ParCelGo Courier & Logistics Network',
+    tagline: 'Real-Time Parcel Booking & Dispatch System',
+    description: 'Enterprise logistics web system built with role-based authorization for Senders, Delivery Personnel, and Admins. Features real-time parcel status tracking, automated dispatch routing, and payment history analytics.',
+    techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'JWT', 'Tailwind CSS'],
+    liveDemoUrl: 'https://parcelgo-express.web.app',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+  {
+    id: 'def-3',
+    title: 'AI Mental Health & Stress Detection System',
+    tagline: 'Machine Learning Survey & Classification Pipeline',
+    description: 'An AI-powered web platform trained on student mental health survey data using SMOTE feature engineering and Random Forest classifier, achieving 84.4% predictive accuracy for early stress intervention.',
+    techStack: ['Python', 'PyTorch', 'Scikit-Learn', 'FastAPI', 'React', 'Tailwind CSS'],
+    liveDemoUrl: 'https://github.com/MdShamim5669',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+  {
+    id: 'def-4',
+    title: 'Multi-Vendor E-Commerce Platform',
+    tagline: 'Scalable Microservices Marketplace Architecture',
+    description: 'High-throughput e-commerce platform with product filtering, inventory synchronization, secure JWT authentication, and automated email order receipts.',
+    techStack: ['Next.js', 'TypeScript', 'PostgreSQL', 'Prisma ORM', 'Redis', 'Docker'],
+    liveDemoUrl: 'https://github.com/MdShamim5669',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+  {
+    id: 'def-5',
+    title: 'Real-Time Collaborative Workspace',
+    tagline: 'WebSocket Document & Task Synchronization Engine',
+    description: 'A real-time team collaboration tool featuring live document editing, kanban task boards, and automated activity notifications via WebSockets.',
+    techStack: ['React', 'Socket.IO', 'Express.js', 'Node.js', 'Tailwind CSS'],
+    liveDemoUrl: 'https://github.com/MdShamim5669',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+  {
+    id: 'def-6',
+    title: 'Cloud Media CDN & Asset Optimizer',
+    tagline: 'Dynamic Image Compression & Storage Service',
+    description: 'High-performance microservice for image CDN storage, WebP auto-compression, and secure signed url generation.',
+    techStack: ['Node.js', 'Express', 'Cloudinary', 'Docker', 'Redis'],
+    liveDemoUrl: 'https://github.com/MdShamim5669',
+    clientGithubUrl: 'https://github.com/MdShamim5669',
+    isFeatured: true,
+  },
+];
+
 export const ProjectsSection = ({ projects = [] }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
 
-  const allProjects = projects;
+  // Merge API projects with default projects to ensure 6 projects total (3 pages of 2 items each)
+  const combinedProjects = [...projects];
+  DEFAULT_PROJECTS.forEach((def) => {
+    if (!combinedProjects.some((p) => p.title?.toLowerCase() === def.title?.toLowerCase())) {
+      combinedProjects.push(def);
+    }
+  });
+
+  const allProjects = combinedProjects;
   const totalPages = Math.max(1, Math.ceil(allProjects.length / itemsPerPage));
 
   // Handle page boundaries if projects change
@@ -200,7 +271,7 @@ export const ProjectsSection = ({ projects = [] }) => {
               <button
                 onClick={handlePrevPage}
                 disabled={validPage === 1}
-                className={`p-2 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-all ${
+                className={`p-2 px-3 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-all ${
                   validPage === 1
                     ? 'bg-slate-900/50 border-slate-800/60 text-slate-600 cursor-not-allowed'
                     : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-cyan-500/50 hover:text-white hover:bg-slate-800'
@@ -208,7 +279,7 @@ export const ProjectsSection = ({ projects = [] }) => {
                 aria-label="Previous Page"
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Previous</span>
+                <span>Previous</span>
               </button>
 
               {/* Page Number Indicator Buttons */}
@@ -219,7 +290,7 @@ export const ProjectsSection = ({ projects = [] }) => {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                       validPage === pageNum
-                        ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-lg shadow-cyan-500/20'
+                        ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-white shadow-lg shadow-cyan-500/20 border border-cyan-400/40'
                         : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
                     }`}
                   >
@@ -231,14 +302,14 @@ export const ProjectsSection = ({ projects = [] }) => {
               <button
                 onClick={handleNextPage}
                 disabled={validPage === totalPages}
-                className={`p-2 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-all ${
+                className={`p-2 px-3 rounded-xl border text-xs font-semibold flex items-center gap-1 transition-all ${
                   validPage === totalPages
                     ? 'bg-slate-900/50 border-slate-800/60 text-slate-600 cursor-not-allowed'
                     : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-cyan-500/50 hover:text-white hover:bg-slate-800'
                 }`}
                 aria-label="Next Page"
               >
-                <span className="hidden sm:inline">Next</span>
+                <span>Next</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -323,4 +394,3 @@ export const ProjectsSection = ({ projects = [] }) => {
     </section>
   );
 };
-
