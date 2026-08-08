@@ -174,7 +174,7 @@ export const Footer = ({ profile: profileProp }) => {
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              {profile?.bio || 'Computer Science & Engineering graduate from DIU. Passionate about machine learning pipelines, scalable microservices, and interactive web applications.'}
+              {'Computer Science & Engineering graduate from DIU. Passionate about machine learning pipelines, scalable microservices, and interactive web applications.'}
             </p>
 
             <div className="pt-1">
