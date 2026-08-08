@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Code, Cpu, Database, Layers, Wrench, Sparkles, Sliders, ExternalLink, X, ArrowLeft, CheckCircle2, GitFork, BarChart3 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
+import ContributionHeatmap from '../ui/ContributionHeatmap';
 
 import claudeLogo from '../../../Docs/tech-logos/claude-ai.png';
 import cloudinaryLogo from '../../../Docs/tech-logos/cloudinary.png';
@@ -388,6 +389,11 @@ export const SkillsSection = ({ skills = [] }) => {
             </div>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* Contribution Activity Heatmap */}
+      <div className="mt-8">
+        <ContributionHeatmap />
       </div>
 
       {/* Large Interactive 3D Skill Detail Modal Window */}
