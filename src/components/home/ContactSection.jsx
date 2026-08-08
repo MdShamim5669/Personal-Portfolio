@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Sparkles, Clock, CheckCircle2, MessageSquare } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
 import { toast } from 'sonner';
-import { useSendMessageMutation } from '../../hooks/usePortfolioQueries';
+import { useSendMessageMutation, useProfileQuery } from '../../hooks/usePortfolioQueries';
 import {
   FacebookIcon,
   GoogleIcon,
@@ -12,7 +12,10 @@ import {
   LinkedinIcon
 } from '../ui/CustomIcons';
 
-export const ContactSection = () => {
+export const ContactSection = ({ profile: profileProp }) => {
+  const { data: profileQuery } = useProfileQuery();
+  const profile = profileProp || profileQuery;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,6 +24,12 @@ export const ContactSection = () => {
   });
 
   const sendMessageMutation = useSendMessageMutation();
+
+  const emailVal = profile?.email || 'tamjidulislamsamim@gmail.com';
+  const phoneVal = profile?.phone || '+880 1782-938883';
+  const locationVal = profile?.location || 'Dhaka, Bangladesh';
+  const linkedinUrl = profile?.linkedinUrl || 'https://www.linkedin.com/in/md-samim5669/';
+  const cleanPhone = (phoneVal || '').replace(/\s+/g, '');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,7 +90,7 @@ export const ContactSection = () => {
             <div className="space-y-3.5">
               <motion.a
                 whileHover={{ scale: 1.02, x: 4 }}
-                href="mailto:tamjidulislamsamim@gmail.com"
+                href={`mailto:${emailVal}`}
                 className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-red-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
               >
                 <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-red-500/50 transition-all shadow-inner">
@@ -90,14 +99,14 @@ export const ContactSection = () => {
                 <div className="overflow-hidden">
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Gmail / Direct Email</span>
                   <span className="text-sm font-bold text-white group-hover/item:text-cyan-300 transition-colors truncate block">
-                    tamjidulislamsamim@gmail.com
+                    {emailVal}
                   </span>
                 </div>
               </motion.a>
 
               <motion.a
                 whileHover={{ scale: 1.02, x: 4 }}
-                href="tel:+8801782938883"
+                href={`tel:${cleanPhone}`}
                 className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-emerald-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
               >
                 <div className="w-12 h-12 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-center shrink-0 group-hover/item:scale-110 group-hover/item:border-emerald-500/50 transition-all shadow-inner">
@@ -106,14 +115,14 @@ export const ContactSection = () => {
                 <div>
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Phone / iMessage</span>
                   <span className="text-sm font-bold text-white group-hover/item:text-emerald-300 transition-colors block">
-                    +880 1782-938883
+                    {phoneVal}
                   </span>
                 </div>
               </motion.a>
 
               <motion.a
                 whileHover={{ scale: 1.02, x: 4 }}
-                href="https://www.linkedin.com/in/md-samim5669/"
+                href={linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 hover:border-blue-500/50 shadow-lg transition-all group/item cursor-pointer backdrop-blur-xl"
@@ -124,7 +133,7 @@ export const ContactSection = () => {
                 <div>
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">LinkedIn Profile</span>
                   <span className="text-sm font-bold text-white group-hover/item:text-blue-300 transition-colors block">
-                    linkedin.com/in/md-samim5669
+                    {linkedinUrl.replace(/^https?:\/\/(www\.)?/, '')}
                   </span>
                 </div>
               </motion.a>
@@ -139,7 +148,7 @@ export const ContactSection = () => {
                 <div>
                   <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block">Location</span>
                   <span className="text-sm font-bold text-white group-hover/item:text-cyan-300 transition-colors block">
-                    Dhaka, Bangladesh
+                    {locationVal}
                   </span>
                 </div>
               </motion.div>

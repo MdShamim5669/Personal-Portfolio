@@ -316,7 +316,7 @@ export const TimelineSection = ({ experiences = [], courses = [] }) => {
                   
                   {/* Description */}
                   <p className="text-slate-400 leading-relaxed text-xs sm:text-sm mb-6 line-clamp-3">
-                    {course.description}
+                    {course.description || course.subtitle}
                   </p>
                 </div>
 

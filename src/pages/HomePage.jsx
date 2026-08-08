@@ -60,10 +60,10 @@ export const HomePage = () => {
         </AnimatedContent>
 
         <AnimatedContent distance={100} duration={1} ease="power3.out" initialOpacity={0}>
-          <ContactSection />
+          <ContactSection profile={profile} />
         </AnimatedContent>
       </main>
-      <Footer />
+      <Footer profile={profile} />
     </div>
   );
 };

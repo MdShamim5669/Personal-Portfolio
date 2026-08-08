@@ -28,6 +28,22 @@ export const portfolioService = {
   updateThesis: (data) => api.put('/thesis', data),
 
   createCourse: (data) => api.post('/courses', data),
+  updateCourse: async (id, data) => {
+    try {
+      return await api.put(`/courses/${id}`, data);
+    } catch (err) {
+      if (err.response?.status === 404) {
+        console.warn('PUT /courses/:id returned 404 on server. Fallback to replace course.');
+        try {
+          await api.delete(`/courses/${id}`);
+        } catch (delErr) {
+          console.warn('Failed deleting existing course during fallback:', delErr);
+        }
+        return await api.post('/courses', data);
+      }
+      throw err;
+    }
+  },
   deleteCourse: (id) => api.delete(`/courses/${id}`),
 
   createExperience: (data) => api.post('/experience', data),

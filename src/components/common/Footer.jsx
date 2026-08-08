@@ -25,10 +25,22 @@ import {
   LinkedinIcon,
   GithubIcon
 } from '../ui/CustomIcons';
+import { useProfileQuery } from '../../hooks/usePortfolioQueries';
 
-export const Footer = () => {
+export const Footer = ({ profile: profileProp }) => {
+  const { data: profileQuery } = useProfileQuery();
+  const profile = profileProp || profileQuery;
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  const emailVal = profile?.email || 'tamjidulislamsamim@gmail.com';
+  const phoneVal = profile?.phone || '+880 1743597989';
+  const locationVal = profile?.location || 'Dhaka, Bangladesh';
+  const githubUrl = profile?.githubUrl || 'https://github.com/MdShamim5669/';
+  const linkedinUrl = profile?.linkedinUrl || 'https://www.linkedin.com/in/md-samim5669/';
+  const resumeUrl = profile?.resumeUrl || '/CV_Shamim.pdf';
+  const cleanPhone = (phoneVal || '').replace(/\s+/g, '');
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -134,7 +146,7 @@ export const Footer = () => {
               <span>Get In Touch</span>
             </a>
             <a
-              href="/CV_Shamim.pdf"
+              href={resumeUrl}
               target="_blank"
               rel="noreferrer"
               className="px-6 py-3.5 rounded-2xl bg-slate-950/80 hover:bg-slate-800/80 text-slate-200 border border-slate-700 hover:border-slate-500 font-bold text-sm hover:scale-105 transition-all duration-300 flex items-center gap-2 shadow-lg"
@@ -154,15 +166,15 @@ export const Footer = () => {
                 <BrainCircuit className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h4 className="font-black text-xl text-white tracking-wide">Md. Samim</h4>
+                <h4 className="font-black text-xl text-white tracking-wide">{profile?.fullName || 'Md. Samim'}</h4>
                 <p className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300">
-                  AI & Backend Engineer
+                  {profile?.title || 'AI & Backend Engineer'}
                 </p>
               </div>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              Computer Science & Engineering graduate from DIU. Passionate about machine learning pipelines, scalable microservices, and interactive web applications.
+              {profile?.bio || 'Computer Science & Engineering graduate from DIU. Passionate about machine learning pipelines, scalable microservices, and interactive web applications.'}
             </p>
 
             <div className="pt-1">
@@ -222,8 +234,8 @@ export const Footer = () => {
                 <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-red-500/50 group-hover:scale-105 transition-all">
                   <GoogleIcon className="w-4 h-4" />
                 </div>
-                <a href="mailto:tamjidulislamsamim@gmail.com" className="hover:text-cyan-300 transition-colors truncate">
-                  tamjidulislamsamim@gmail.com
+                <a href={`mailto:${emailVal}`} className="hover:text-cyan-300 transition-colors truncate">
+                  {emailVal}
                 </a>
               </div>
 
@@ -231,8 +243,8 @@ export const Footer = () => {
                 <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-emerald-500/50 group-hover:scale-105 transition-all">
                   <IMessageIcon className="w-4.5 h-4.5" fill="#34DA50" />
                 </div>
-                <a href="tel:+8801782938883" className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
-                  <span>+880 1782-938883</span>
+                <a href={`tel:${cleanPhone}`} className="hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                  <span>{phoneVal}</span>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">iMessage</span>
                 </a>
               </div>
@@ -241,7 +253,7 @@ export const Footer = () => {
                 <div className="w-9 h-9 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center shrink-0 shadow-inner group-hover:border-cyan-400/50 group-hover:scale-105 transition-all">
                   <AzureLocationIcon className="w-4.5 h-4.5" />
                 </div>
-                <span className="group-hover:text-cyan-300 transition-colors">Dhaka, Bangladesh</span>
+                <span className="group-hover:text-cyan-300 transition-colors">{locationVal}</span>
               </div>
             </div>
 
@@ -252,7 +264,7 @@ export const Footer = () => {
               </span>
               <div className="flex items-center gap-2 flex-wrap">
                 <a
-                  href="https://github.com/samim"
+                  href={githubUrl}
                   target="_blank"
                   rel="noreferrer"
                   title="GitHub Profile"
@@ -262,7 +274,7 @@ export const Footer = () => {
                 </a>
 
                 <a
-                  href="https://www.linkedin.com/in/md-samim5669/"
+                  href={linkedinUrl}
                   target="_blank"
                   rel="noreferrer"
                   title="LinkedIn Profile"
@@ -282,7 +294,7 @@ export const Footer = () => {
                 </a>
 
                 <a
-                  href="mailto:tamjidulislamsamim@gmail.com"
+                  href={`mailto:${emailVal}`}
                   title="Google / Gmail"
                   className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-red-400 hover:shadow-[0_0_15px_rgba(234,67,53,0.4)] hover:scale-110 transition-all duration-300"
                 >
@@ -290,7 +302,7 @@ export const Footer = () => {
                 </a>
 
                 <a
-                  href="sms:+8801782938883"
+                  href={`sms:${cleanPhone}`}
                   title="iMessage / SMS"
                   className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(52,218,80,0.4)] hover:scale-110 transition-all duration-300"
                 >

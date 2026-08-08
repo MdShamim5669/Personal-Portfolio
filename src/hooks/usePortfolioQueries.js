@@ -148,6 +148,11 @@ export function useAdminMutations() {
     onSuccess: () => invalidate(QUERY_KEYS.courses),
   });
 
+  const updateCourse = useMutation({
+    mutationFn: ({ id, data }) => portfolioService.updateCourse(id, data),
+    onSuccess: () => invalidate(QUERY_KEYS.courses),
+  });
+
   const deleteCourse = useMutation({
     mutationFn: (id) => portfolioService.deleteCourse(id),
     onSuccess: () => invalidate(QUERY_KEYS.courses),
@@ -177,6 +182,7 @@ export function useAdminMutations() {
     deleteSkill,
     updateThesis,
     createCourse,
+    updateCourse,
     deleteCourse,
     createExperience,
     deleteExperience,

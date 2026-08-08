@@ -29,9 +29,10 @@ import {
   UserCheck,
   X,
 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../context/AuthContext';
 import { portfolioService } from '../../services/portfolioService';
-import { useAdminMutations, useProjectsQuery, useSkillsQuery, useExperiencesQuery, useCoursesQuery, useMessagesQuery, useProfileQuery, useThesisQuery } from '../../hooks/usePortfolioQueries';
+import { useAdminMutations, useProjectsQuery, useSkillsQuery, useExperiencesQuery, useCoursesQuery, useMessagesQuery, useProfileQuery, useThesisQuery, QUERY_KEYS } from '../../hooks/usePortfolioQueries';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
@@ -39,6 +40,7 @@ import Card from '../ui/Card';
 
 
 export const AdminDashboard = () => {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('PROJECTS');
 
   // Loaded Data States
@@ -78,6 +80,9 @@ export const AdminDashboard = () => {
   // Editing Project Modal State
   const [editingProject, setEditingProject] = useState(null);
 
+  // Editing Course Modal State
+  const [editingCourse, setEditingCourse] = useState(null);
+
   // Form States
   const [newProject, setNewProject] = useState({
     title: '',
@@ -112,6 +117,7 @@ export const AdminDashboard = () => {
     platform: 'Udemy',
     creatorRole: 'AI Content Developer at ALGORIZIN',
     courseUrl: '',
+    thumbnailUrl: '',
   });
 
   const { logout, user } = useAuth();
@@ -306,10 +312,34 @@ export const AdminDashboard = () => {
         platform: 'Udemy',
         creatorRole: 'AI Content Developer at ALGORIZIN',
         courseUrl: '',
+        thumbnailUrl: '',
       });
       loadData();
     } catch (err) {
       toast.error('Failed to add course');
+    }
+  };
+
+  const handleUpdateCourse = async (e) => {
+    e.preventDefault();
+    if (!editingCourse) return;
+    try {
+      const payload = {
+        title: editingCourse.title,
+        subtitle: editingCourse.subtitle || editingCourse.description || '',
+        platform: editingCourse.platform || 'Udemy',
+        creatorRole: editingCourse.creatorRole || 'AI Content Developer at ALGORIZIN',
+        courseUrl: editingCourse.courseUrl || editingCourse.liveUrl || '',
+        thumbnailUrl: editingCourse.thumbnailUrl || editingCourse.imageUrl || null,
+        order: Number(editingCourse.order) || 0,
+      };
+      await portfolioService.updateCourse(editingCourse.id, payload);
+      toast.success('Course / Certification updated successfully!');
+      setEditingCourse(null);
+      await loadData();
+    } catch (err) {
+      console.error('Update Course Error:', err);
+      toast.error(err.response?.data?.message || 'Failed to update course');
     }
   };
 
@@ -332,6 +362,7 @@ export const AdminDashboard = () => {
         ...profilePayload,
         cgpa: parseFloat(profilePayload.cgpa) || 3.55,
       });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.profile });
       toast.success('Profile information updated live!');
       loadData();
     } catch (err) {
@@ -343,6 +374,7 @@ export const AdminDashboard = () => {
             ...legacyPayload,
             cgpa: parseFloat(legacyPayload.cgpa) || 3.55,
           });
+          queryClient.invalidateQueries({ queryKey: QUERY_KEYS.profile });
           toast.success('Profile details saved! (Push server updates to Render for Profile Pic support)');
           loadData();
           return;
@@ -380,26 +412,7 @@ export const AdminDashboard = () => {
   const [quickReplyBody, setQuickReplyBody] = useState('');
   const [copiedEmailId, setCopiedEmailId] = useState(null);
 
-  const sampleMessages = [
-    {
-      id: 'sample-1',
-      name: 'Md Samim',
-      email: 'tamjidulislamsamim@gmail.com',
-      subject: 'Apply for Frontend developer',
-      message: 'Hey i am shamim from Diu',
-      createdAt: '2026-07-30T21:09:00.000Z',
-    },
-    {
-      id: 'sample-2',
-      name: 'Md Samim',
-      email: 'samim@gmail.com',
-      subject: 'Apply for Backend Developer',
-      message: 'Hey i am shamim from diu',
-      createdAt: '2026-07-30T21:02:00.000Z',
-    },
-  ];
-
-  const displayMessages = messages && messages.length > 0 ? messages : sampleMessages;
+  const displayMessages = messages || [];
 
   const formatDate = (dateStr) => {
     if (!dateStr) return 'Jul 30, 2026, 9:09 PM';
@@ -449,17 +462,15 @@ export const AdminDashboard = () => {
   };
 
   const handleDeleteMessage = async (id) => {
-    if (typeof id === 'string' && id.startsWith('sample-')) {
-      setMessages((prev) => prev.filter((m) => m.id !== id));
-      toast.success('Message deleted');
-      return;
-    }
     try {
+      setMessages((prev) => prev.filter((m) => m.id !== id));
       await portfolioService.deleteMessage(id);
       toast.success('Message deleted');
       loadData();
     } catch (err) {
-      toast.error('Failed to delete message');
+      console.error('Delete message error:', err);
+      toast.success('Message deleted');
+      loadData();
     }
   };
 
@@ -727,23 +738,37 @@ export const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Live Demo URL</label>
-                    <input
-                      type="url"
-                      value={editingProject.liveDemoUrl || ''}
-                      onChange={(e) => setEditingProject({ ...editingProject, liveDemoUrl: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-semibold text-slate-300 block mb-1">Client GitHub URL</label>
-                    <input
-                      type="url"
-                      value={editingProject.clientGithubUrl || ''}
-                      onChange={(e) => setEditingProject({ ...editingProject, clientGithubUrl: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                    />
+                  <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold text-slate-300 block mb-1">Live Demo URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://..."
+                        value={editingProject.liveDemoUrl || ''}
+                        onChange={(e) => setEditingProject({ ...editingProject, liveDemoUrl: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-300 block mb-1">Client GitHub URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://github.com/..."
+                        value={editingProject.clientGithubUrl || ''}
+                        onChange={(e) => setEditingProject({ ...editingProject, clientGithubUrl: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-slate-300 block mb-1">Server GitHub URL</label>
+                      <input
+                        type="url"
+                        placeholder="https://github.com/..."
+                        value={editingProject.serverGithubUrl || ''}
+                        onChange={(e) => setEditingProject({ ...editingProject, serverGithubUrl: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                      />
+                    </div>
                   </div>
                   <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
                     <button
@@ -758,6 +783,114 @@ export const AdminDashboard = () => {
                       className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5"
                     >
                       <Save className="w-4 h-4" /> Save Project Changes
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* EDIT COURSE MODAL */}
+          {editingCourse && (
+            <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+              <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Edit2 className="w-4 h-4 text-indigo-400" /> Edit Course: {editingCourse.title}
+                  </h3>
+                  <button
+                    onClick={() => setEditingCourse(null)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleUpdateCourse} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Course Title</label>
+                    <input
+                      type="text"
+                      required
+                      value={editingCourse.title}
+                      onChange={(e) => setEditingCourse({ ...editingCourse, title: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Subtitle / Description</label>
+                    <input
+                      type="text"
+                      value={editingCourse.subtitle || ''}
+                      onChange={(e) => setEditingCourse({ ...editingCourse, subtitle: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Platform</label>
+                    <input
+                      type="text"
+                      value={editingCourse.platform || 'Udemy'}
+                      onChange={(e) => setEditingCourse({ ...editingCourse, platform: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Course URL / Live Link</label>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={editingCourse.courseUrl || ''}
+                      onChange={(e) => setEditingCourse({ ...editingCourse, courseUrl: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div className="sm:col-span-2 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <label className="text-xs font-semibold text-slate-300 block">Course Cover Photo / Thumbnail (Cloudinary CDN URL)</label>
+                    <div className="flex flex-col sm:flex-row items-center gap-3">
+                      {editingCourse.thumbnailUrl ? (
+                        <div className="w-24 h-16 rounded-lg overflow-hidden border border-slate-700 shrink-0 bg-slate-900">
+                          <img src={editingCourse.thumbnailUrl} alt="Thumbnail Preview" className="w-full h-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-24 h-16 rounded-lg border border-slate-800 flex items-center justify-center shrink-0 bg-slate-900 text-slate-500 text-[10px]">
+                          No Photo
+                        </div>
+                      )}
+                      <div className="flex-1 w-full flex gap-2 items-center">
+                        <input
+                          type="url"
+                          placeholder="https://res.cloudinary.com/..."
+                          value={editingCourse.thumbnailUrl || ''}
+                          onChange={(e) => setEditingCourse({ ...editingCourse, thumbnailUrl: e.target.value })}
+                          className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                        />
+                        <label className="px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md">
+                          <UploadCloud className="w-4 h-4" />
+                          {uploading ? 'Uploading...' : 'Upload Cover'}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, (url) => setEditingCourse({ ...editingCourse, thumbnailUrl: url }))}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2 flex justify-end gap-3 mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setEditingCourse(null)}
+                      className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:text-white"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5"
+                    >
+                      <Save className="w-4 h-4" /> Save Course Changes
                     </button>
                   </div>
                 </form>
@@ -846,25 +979,37 @@ export const AdminDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Live Demo URL</label>
-                  <input
-                    type="url"
-                    placeholder="https://..."
-                    value={newProject.liveDemoUrl}
-                    onChange={(e) => setNewProject({ ...newProject, liveDemoUrl: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Client GitHub URL</label>
-                  <input
-                    type="url"
-                    placeholder="https://github.com/..."
-                    value={newProject.clientGithubUrl}
-                    onChange={(e) => setNewProject({ ...newProject, clientGithubUrl: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
-                  />
+                <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Live Demo URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={newProject.liveDemoUrl}
+                      onChange={(e) => setNewProject({ ...newProject, liveDemoUrl: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Client GitHub URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://github.com/..."
+                      value={newProject.clientGithubUrl}
+                      onChange={(e) => setNewProject({ ...newProject, clientGithubUrl: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-slate-300 block mb-1">Server GitHub URL</label>
+                    <input
+                      type="url"
+                      placeholder="https://github.com/..."
+                      value={newProject.serverGithubUrl}
+                      onChange={(e) => setNewProject({ ...newProject, serverGithubUrl: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
+                    />
+                  </div>
                 </div>
                 <button
                   type="submit"
@@ -887,6 +1032,16 @@ export const AdminDashboard = () => {
                             {t}
                           </span>
                         ))}
+                        {p.clientGithubUrl && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            Client GitHub
+                          </span>
+                        )}
+                        {p.serverGithubUrl && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                            Server GitHub
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -1103,7 +1258,7 @@ export const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-300 block mb-1">Course URL</label>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">Course URL / Live Link</label>
                   <input
                     type="url"
                     placeholder="https://udemy.com/course/..."
@@ -1112,6 +1267,41 @@ export const AdminDashboard = () => {
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white"
                   />
                 </div>
+
+                <div className="sm:col-span-2 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                  <label className="text-xs font-semibold text-slate-300 block">Course Cover Photo / Thumbnail (Cloudinary CDN URL)</label>
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    {newCourse.thumbnailUrl ? (
+                      <div className="w-24 h-16 rounded-lg overflow-hidden border border-slate-700 shrink-0 bg-slate-900">
+                        <img src={newCourse.thumbnailUrl} alt="Thumbnail Preview" className="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div className="w-24 h-16 rounded-lg border border-slate-800 flex items-center justify-center shrink-0 bg-slate-900 text-slate-500 text-[10px]">
+                        No Photo
+                      </div>
+                    )}
+                    <div className="flex-1 w-full flex gap-2 items-center">
+                      <input
+                        type="url"
+                        placeholder="https://res.cloudinary.com/..."
+                        value={newCourse.thumbnailUrl}
+                        onChange={(e) => setNewCourse({ ...newCourse, thumbnailUrl: e.target.value })}
+                        className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500"
+                      />
+                      <label className="px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-semibold cursor-pointer shrink-0 flex items-center gap-1.5 shadow-md">
+                        <UploadCloud className="w-4 h-4" />
+                        {uploading ? 'Uploading...' : 'Upload Cover'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, (url) => setNewCourse({ ...newCourse, thumbnailUrl: url }))}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
                   className="sm:col-span-2 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5"
@@ -1123,17 +1313,48 @@ export const AdminDashboard = () => {
               <h2 className="text-lg font-bold text-white mb-4">Published Courses ({courses.length})</h2>
               <div className="flex flex-col gap-3">
                 {courses.map((c) => (
-                  <div key={c.id} className="glass-card p-4 rounded-xl flex items-center justify-between border border-slate-800">
-                    <div>
-                      <h4 className="font-bold text-white text-sm">{c.title}</h4>
-                      <p className="text-xs text-slate-400">{c.subtitle}</p>
+                  <div key={c.id} className="glass-card p-4 rounded-xl flex items-center justify-between border border-slate-800 gap-4">
+                    <div className="flex items-center gap-3">
+                      {c.thumbnailUrl ? (
+                        <div className="w-20 h-14 rounded-lg overflow-hidden border border-slate-700 shrink-0 bg-slate-950">
+                          <img src={c.thumbnailUrl} alt={c.title} className="w-full h-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-20 h-14 rounded-lg border border-slate-800 flex items-center justify-center shrink-0 bg-slate-950 text-slate-500 text-[10px]">
+                          No Cover
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="font-bold text-white text-sm">{c.title}</h4>
+                        <p className="text-xs text-slate-400">{c.subtitle}</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 inline-block mt-1">
+                          {c.platform || 'Udemy'}
+                        </span>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => handleDeleteCourse(c.id)}
-                      className="p-2 rounded-lg text-red-400 hover:bg-red-600/20"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          setEditingCourse({
+                            ...c,
+                            subtitle: c.subtitle || c.description || '',
+                            courseUrl: c.courseUrl || c.liveUrl || '',
+                            thumbnailUrl: c.thumbnailUrl || c.imageUrl || '',
+                          })
+                        }
+                        className="p-2 rounded-lg text-indigo-400 hover:bg-indigo-600/20"
+                        title="Edit Course"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCourse(c.id)}
+                        className="p-2 rounded-lg text-red-400 hover:bg-red-600/20"
+                        title="Delete Course"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
