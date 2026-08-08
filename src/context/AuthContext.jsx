@@ -15,6 +15,11 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
+      // If user is already set (e.g. from login response), skip duplicate fetch
+      if (user) {
+        setLoading(false);
+        return;
+      }
       try {
         const res = await portfolioService.getMe();
         setUser(res.data.data);
@@ -34,8 +39,8 @@ export const AuthProvider = ({ children }) => {
     const res = await portfolioService.login({ email, password });
     const { token: jwtToken, user: userData } = res.data.data;
     localStorage.setItem('samim_portfolio_token', jwtToken);
-    setToken(jwtToken);
     setUser(userData);
+    setToken(jwtToken);
     return userData;
   };
 

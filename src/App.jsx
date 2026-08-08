@@ -8,6 +8,7 @@ import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { HomePage } from './pages/HomePage';
 import { CoursesPage } from './pages/CoursesPage';
+import { ProjectsPage } from './pages/ProjectsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import SplashCursor from './components/ui/SplashCursor';
 
@@ -75,6 +76,7 @@ export default function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
             <Route
