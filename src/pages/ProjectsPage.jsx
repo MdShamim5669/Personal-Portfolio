@@ -124,7 +124,7 @@ export const ProjectsPage = () => {
             to="/"
             className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-full bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-400/50 text-xs font-semibold transition-all hover:-translate-x-1 shadow-lg"
           >
-            <ArrowLeft className="w-4 h-4 text-cyan-400" /> Back to Portfolio Home
+            <ArrowLeft className="w-4 h-4 text-cyan-400" /> Back
           </Link>
         </div>
 

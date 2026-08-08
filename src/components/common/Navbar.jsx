@@ -26,15 +26,7 @@ export const Navbar = () => {
     const targetId = href.replace('#', '');
 
     if (location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        const elem = document.getElementById(targetId);
-        if (elem) {
-          const yOffset = -80;
-          const y = elem.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      }, 350);
+      navigate('/', { state: { scrollTo: targetId } });
     } else {
       const elem = document.getElementById(targetId);
       if (elem) {

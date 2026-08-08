@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Footer } from '../components/common/Footer';
 import { Navbar } from '../components/common/Navbar';
 import { Loader } from '../components/common/Loader';
@@ -20,6 +21,7 @@ import {
 } from '../hooks/usePortfolioQueries';
 
 export const HomePage = () => {
+  const location = useLocation();
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
   const { data: skills = [], isLoading: skillsLoading } = useSkillsQuery();
   const { data: projects = [], isLoading: projectsLoading } = useProjectsQuery();
@@ -28,6 +30,21 @@ export const HomePage = () => {
   const { data: experiences = [], isLoading: expLoading } = useExperiencesQuery();
 
   const isLoading = profileLoading || skillsLoading || projectsLoading || thesisLoading || coursesLoading || expLoading;
+
+  useEffect(() => {
+    if (!isLoading && location.state?.scrollTo) {
+      const targetId = location.state.scrollTo;
+      const timer = setTimeout(() => {
+        const elem = document.getElementById(targetId);
+        if (elem) {
+          const yOffset = -80;
+          const y = elem.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, location.state]);
 
   if (isLoading) {
     return <Loader />;
