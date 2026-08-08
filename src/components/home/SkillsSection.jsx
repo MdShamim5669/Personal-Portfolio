@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Brain, Code, Cpu, Database, Layers, Wrench, Sparkles, ExternalLink, X, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
-import ContributionHeatmap from '../ui/ContributionHeatmap';
 import SkillCategoryChart from '../ui/SkillCategoryChart';
 import SkillActivityChart from '../ui/SkillActivityChart';
 
@@ -123,11 +122,6 @@ export const SkillsSection = ({ skills = [] }) => {
         <p className="text-slate-400 text-sm mt-3 leading-relaxed">
           A breakdown of my technical stack across full-stack web platforms, machine learning frameworks, databases, and development tools.
         </p>
-      </div>
-
-      {/* GitHub Contribution Heatmap */}
-      <div className="mb-10">
-        <ContributionHeatmap />
       </div>
 
       {/* Marquee Infinite Ticker Row */}
