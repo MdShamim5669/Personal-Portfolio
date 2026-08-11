@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { portfolioService } from '../services/portfolioService';
 
 const AuthContext = createContext();
@@ -7,6 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('samim_portfolio_token'));
   const [loading, setLoading] = useState(true);
+  // Tracks if user data was already populated by a fresh login — prevents
+  // the useEffect from firing a redundant GET /auth/me immediately after login.
+  const justLoggedInRef = useRef(false);
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -15,8 +18,9 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      // If user is already set (e.g. from login response), skip duplicate fetch
-      if (user) {
+      // Skip the /auth/me fetch if login() already gave us the user data
+      if (justLoggedInRef.current) {
+        justLoggedInRef.current = false;
         setLoading(false);
         return;
       }
@@ -39,6 +43,8 @@ export const AuthProvider = ({ children }) => {
     const res = await portfolioService.login({ email, password });
     const { token: jwtToken, user: userData } = res.data.data;
     localStorage.setItem('samim_portfolio_token', jwtToken);
+    // Mark that we already have user data — suppresses duplicate /auth/me call
+    justLoggedInRef.current = true;
     setUser(userData);
     setToken(jwtToken);
     return userData;

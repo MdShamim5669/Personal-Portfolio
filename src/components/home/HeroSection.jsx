@@ -6,12 +6,15 @@ import Badge from '../ui/Badge';
 import Card from '../ui/Card';
 import TypingHeading from '../ui/TypingHeading';
 
-import cherryBlossomVid from '../../../Docs/Banner_Bg/large-cherry-blossom-tree.960x540.mp4';
-import mountFujiVid from '../../../Docs/Banner_Bg/mount-fuji.960x540.mp4';
-import omiVillageVid from '../../../Docs/Banner_Bg/omi-village-ghost-of-tsushima.960x540.mp4';
-import forestHouseVid from '../../../Docs/Banner_Bg/small-house-in-forest.960x540.mp4';
-import flowerFieldVid from '../../../Docs/Banner_Bg/spring-flower-field.960x540.mp4';
-import springMeadowVid from '../../../Docs/Banner_Bg/spring-meadow.960x540.mp4';
+// Use URL references instead of static imports — prevents Vite from
+// bundling/preloading all 6 heavy MP4s on initial page load.
+// Only the currently active video will be fetched by the browser.
+const cherryBlossomVid = new URL('../../../Docs/Banner_Bg/large-cherry-blossom-tree.960x540.mp4', import.meta.url).href;
+const mountFujiVid     = new URL('../../../Docs/Banner_Bg/mount-fuji.960x540.mp4', import.meta.url).href;
+const omiVillageVid    = new URL('../../../Docs/Banner_Bg/omi-village-ghost-of-tsushima.960x540.mp4', import.meta.url).href;
+const forestHouseVid   = new URL('../../../Docs/Banner_Bg/small-house-in-forest.960x540.mp4', import.meta.url).href;
+const flowerFieldVid   = new URL('../../../Docs/Banner_Bg/spring-flower-field.960x540.mp4', import.meta.url).href;
+const springMeadowVid  = new URL('../../../Docs/Banner_Bg/spring-meadow.960x540.mp4', import.meta.url).href;
 
 // 🌸 Animated Falling Sakura Petal Rain Effect for Cherry Blossom Background
 const SakuraPetalRain = () => {
@@ -112,7 +115,7 @@ const SunRainOverlay = () => {
   );
 };
 
-export const HeroSection = ({ profile }) => {
+export const HeroSection = ({ profile, isLoading = false }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isAutoplay, setIsAutoplay] = useState(true);
