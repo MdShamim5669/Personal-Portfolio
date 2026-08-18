@@ -66,9 +66,6 @@ function useCountUp(target, { duration = 1200, delay = 0 } = {}) {
   return { value, nodeRef };
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Single animated skill row (name + progress bar + count-up %)
-───────────────────────────────────────────────────────────────── */
 const SKILL_COLORS = [
   { bar: '#06b6d4', glow: 'rgba(6,182,212,0.35)' },
   { bar: '#6366f1', glow: 'rgba(99,102,241,0.35)' },
@@ -79,50 +76,6 @@ const SKILL_COLORS = [
   { bar: '#3b82f6', glow: 'rgba(59,130,246,0.35)' },
   { bar: '#14b8a6', glow: 'rgba(20,184,166,0.35)' },
 ];
-
-const AnimatedSkillRow = ({ skill, index, delay = 0 }) => {
-  const proficiency = skill.proficiency || 85;
-  const color = SKILL_COLORS[index % SKILL_COLORS.length];
-  const { value, nodeRef } = useCountUp(proficiency, { duration: 1100, delay: delay + index * 60 });
-
-  const label =
-    proficiency >= 90 ? 'Expert' : proficiency >= 75 ? 'Advanced' : 'Intermediate';
-
-  return (
-    <div ref={nodeRef} className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-semibold text-slate-200 truncate max-w-[60%]">{skill.name}</span>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span
-            className="text-[10px] font-bold px-1.5 py-0.5 rounded-md border"
-            style={{
-              color: color.bar,
-              borderColor: color.bar + '55',
-              backgroundColor: color.glow,
-            }}
-          >
-            {label}
-          </span>
-          <span className="text-xs font-extrabold tabular-nums" style={{ color: color.bar }}>
-            {value}%
-          </span>
-        </div>
-      </div>
-
-      {/* Progress bar track */}
-      <div className="w-full h-1.5 rounded-full bg-slate-800/80 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-none"
-          style={{
-            width: `${value}%`,
-            background: `linear-gradient(90deg, ${color.bar}cc, ${color.bar})`,
-            boxShadow: `0 0 8px ${color.glow}`,
-          }}
-        />
-      </div>
-    </div>
-  );
-};
 
 /* ─────────────────────────────────────────────────────────────────
    SkillCategoryChart
@@ -258,7 +211,7 @@ export const SkillCategoryChart = ({ categoryTitle, skillsData = [] }) => {
 
   const radarSeries = useMemo(
     () => [{ name: 'Engineering Competency', data: [92, 95, 94, 91, 93, 96, 97] }],
-    [],
+    [categoryTitle],
   );
 
   return (
@@ -327,9 +280,8 @@ export const SkillCategoryChart = ({ categoryTitle, skillsData = [] }) => {
           </div>
         </div>
 
-        {/* Right: Radar + Animated Skill List */}
+        {/* Right: Radar Chart */}
         <div className="lg:col-span-5 w-full flex flex-col gap-5">
-          {/* Radar Chart */}
           <div className="w-full bg-slate-900/60 border border-slate-800/90 rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-inner">
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2">
               <span className="text-xs font-bold text-slate-200 tracking-wide flex items-center gap-1.5">
@@ -353,31 +305,6 @@ export const SkillCategoryChart = ({ categoryTitle, skillsData = [] }) => {
               Multi-disciplinary expertise across Web Microservices, Artificial Intelligence, and Database Architectures.
             </p>
           </div>
-
-          {/* Animated Skill Proficiency Breakdown */}
-          {skillsData.length > 0 && (
-            <div className="w-full bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-inner">
-              <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-4">
-                <span className="text-xs font-bold text-slate-200 tracking-wide flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-indigo-400" /> Proficiency Breakdown
-                </span>
-                <span className="text-[10px] font-bold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-500/30">
-                  Live Stats
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-3.5">
-                {skillsData.map((skill, idx) => (
-                  <AnimatedSkillRow
-                    key={skill.name || idx}
-                    skill={skill}
-                    index={idx}
-                    delay={200}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
