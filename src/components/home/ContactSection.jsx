@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Sparkles, Clock, CheckCircle2, MessageSquare } from 'lucide-react';
 import TypingHeading from '../ui/TypingHeading';
+import { SmoothInput } from '../ui/skiper106';
 import { toast } from 'sonner';
 import { useSendMessageMutation, useProfileQuery } from '../../hooks/usePortfolioQueries';
 import {
@@ -176,26 +177,24 @@ export const ContactSection = ({ profile: profileProp }) => {
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
                     Your Name <span className="text-cyan-400">*</span>
                   </label>
-                  <input
+                  <SmoothInput
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Md. Samim"
-                    className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 transition-all shadow-inner"
                   />
                 </div>
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
                     Email Address <span className="text-cyan-400">*</span>
                   </label>
-                  <input
+                  <SmoothInput
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="name@example.com"
-                    className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 transition-all shadow-inner"
                   />
                 </div>
               </div>
@@ -204,12 +203,11 @@ export const ContactSection = ({ profile: profileProp }) => {
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
                   Subject
                 </label>
-                <input
+                <SmoothInput
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   placeholder="Inquiry / Research Collaboration / Hiring"
-                  className="w-full bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/20 transition-all shadow-inner"
                 />
               </div>
 
