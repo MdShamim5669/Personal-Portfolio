@@ -52,8 +52,13 @@ export const portfolioService = {
   getMessages: () => api.get('/messages'),
   deleteMessage: (id) => api.delete(`/messages/${id}`),
 
-  uploadFile: (formData) =>
-    api.post('/upload', formData, {
+  uploadFile: (formData, folder = 'Portfolio') => {
+    if (folder && formData instanceof FormData && !formData.has('folder')) {
+      formData.append('folder', folder);
+    }
+    const url = folder ? ('/upload?folder=' + encodeURIComponent(folder)) : '/upload';
+    return api.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-    }),
+    });
+  },
 };

@@ -165,21 +165,22 @@ export const AdminDashboard = () => {
   }, []);
 
   // --- Handlers ---
-  const handleFileUpload = async (e, callback) => {
+  const handleFileUpload = async (e, callback, folder = 'Portfolio') => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append('file', file);
+    if (folder) formData.append('folder', folder);
 
     try {
       setUploading(true);
-      const toastId = toast.loading('Uploading photo to Cloudinary...');
-      const res = await portfolioService.uploadFile(formData);
+      const toastId = toast.loading('Uploading photo to ' + folder + '...');
+      const res = await portfolioService.uploadFile(formData, folder);
       const url = res.data?.data?.url || res.data?.url || res.data?.data?.secure_url || res.data?.secure_url;
       if (url) {
-        callback(url);
-        toast.success('Photo uploaded successfully!', { id: toastId });
+        if (callback) callback(url);
+        toast.success('Photo uploaded successfully to ' + folder + '!', { id: toastId });
       } else {
         toast.error('Failed to parse uploaded photo URL', { id: toastId });
       }
@@ -199,6 +200,7 @@ export const AdminDashboard = () => {
         techStack: newProject.techStack.split(',').map((s) => s.trim()).filter(Boolean),
       };
       await portfolioService.createProject(payload);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.projects });
       toast.success('Project added successfully!');
       setNewProject({
         title: '',
@@ -227,6 +229,7 @@ export const AdminDashboard = () => {
           : editingProject.techStack,
       };
       await portfolioService.updateProject(editingProject.id, payload);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.projects });
       toast.success('Project updated successfully!');
       setEditingProject(null);
       loadData();
@@ -239,6 +242,7 @@ export const AdminDashboard = () => {
     if (!window.confirm('Delete this project? Cloudinary media will also be deleted.')) return;
     try {
       await portfolioService.deleteProject(id);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.projects });
       toast.success('Project and associated Cloudinary media deleted!');
       loadData();
     } catch (err) {
@@ -305,6 +309,7 @@ export const AdminDashboard = () => {
     e.preventDefault();
     try {
       await portfolioService.createCourse(newCourse);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.courses });
       toast.success('Course / Certification added successfully!');
       setNewCourse({
         title: '',
@@ -347,6 +352,7 @@ export const AdminDashboard = () => {
     if (!window.confirm('Delete this course entry?')) return;
     try {
       await portfolioService.deleteCourse(id);
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.courses });
       toast.success('Course entry deleted');
       loadData();
     } catch (err) {
@@ -732,7 +738,7 @@ export const AdminDashboard = () => {
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            onChange={(e) => handleFileUpload(e, (url) => setEditingProject({ ...editingProject, thumbnailUrl: url }))}
+                            onChange={(e) => handleFileUpload(e, (url) => setEditingProject(prev => ({ ...prev, thumbnailUrl: url })), 'Portfolio/projects')}
                           />
                         </label>
                       </div>
@@ -872,7 +878,7 @@ export const AdminDashboard = () => {
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            onChange={(e) => handleFileUpload(e, (url) => setEditingCourse({ ...editingCourse, thumbnailUrl: url }))}
+                            onChange={(e) => handleFileUpload(e, (url) => setEditingCourse(prev => ({ ...prev, thumbnailUrl: url })), 'Portfolio/courses')}
                           />
                         </label>
                       </div>
@@ -973,7 +979,7 @@ export const AdminDashboard = () => {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => handleFileUpload(e, (url) => setNewProject({ ...newProject, thumbnailUrl: url }))}
+                          onChange={(e) => handleFileUpload(e, (url) => setNewProject(prev => ({ ...prev, thumbnailUrl: url })), 'Portfolio/projects')}
                         />
                       </label>
                     </div>
@@ -1295,7 +1301,7 @@ export const AdminDashboard = () => {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => handleFileUpload(e, (url) => setNewCourse({ ...newCourse, thumbnailUrl: url }))}
+                          onChange={(e) => handleFileUpload(e, (url) => setNewCourse(prev => ({ ...prev, thumbnailUrl: url })), 'Portfolio/courses')}
                         />
                       </label>
                     </div>
@@ -1475,7 +1481,7 @@ export const AdminDashboard = () => {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={(e) => handleFileUpload(e, (url) => setProfile({ ...profile, profilePicUrl: url }))}
+                          onChange={(e) => handleFileUpload(e, (url) => setProfile(prev => ({ ...prev, profilePicUrl: url })), 'Portfolio/profile')}
                         />
                       </label>
                     </div>
@@ -1560,7 +1566,7 @@ export const AdminDashboard = () => {
                           type="file"
                           accept=".pdf,.doc,.docx"
                           className="hidden"
-                          onChange={(e) => handleFileUpload(e, (url) => setProfile({ ...profile, resumeUrl: url }))}
+                          onChange={(e) => handleFileUpload(e, (url) => setProfile(prev => ({ ...prev, resumeUrl: url })), 'Portfolio/profile')}
                         />
                       </label>
                     </div>
@@ -1617,7 +1623,7 @@ export const AdminDashboard = () => {
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            onChange={(e) => handleFileUpload(e, (url) => setProfile({ ...profile, educationPicUrl: url }))}
+                            onChange={(e) => handleFileUpload(e, (url) => setProfile(prev => ({ ...prev, educationPicUrl: url })), 'Portfolio/profile')}
                           />
                         </label>
                       </div>
@@ -1765,7 +1771,7 @@ export const AdminDashboard = () => {
                 <p className="text-xs text-slate-300 mb-4">Select an image, video, or PDF document to upload to Cloudinary CDN</p>
                 <input
                   type="file"
-                  onChange={(e) => handleFileUpload(e)}
+                  onChange={(e) => handleFileUpload(e, null, 'Portfolio/media')}
                   className="text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500"
                 />
                 {uploading && <p className="text-xs text-cyan-400 mt-3">Uploading to Cloudinary...</p>}

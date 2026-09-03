@@ -228,13 +228,17 @@ export const ProjectsPage = () => {
                 >
                   {/* Thumbnail */}
                   {project.thumbnailUrl && (
-                    <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-950">
-                      <img
-                        src={project.thumbnailUrl}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                    <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-950/90 group">
+                          <img
+                            src={project.thumbnailUrl}
+                            alt={project.title}
+                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
                       {project.isFeatured && (
                         <div className="absolute top-3 right-3">
                           <Badge variant="indigo" className="gap-1 border-amber-500/40 text-amber-300 bg-slate-950/80 backdrop-blur-md shadow-lg">
@@ -384,11 +388,11 @@ export const ProjectsPage = () => {
           {selectedProject && (
             <div className="space-y-6">
               {selectedProject.thumbnailUrl && (
-                <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 max-h-64 sm:max-h-72">
+                <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800/80 w-full flex items-center justify-center p-1">
                   <img
                     src={selectedProject.thumbnailUrl}
                     alt={selectedProject.title}
-                    className="w-full h-full object-cover"
+                    className="w-full max-h-[420px] object-contain rounded-xl shadow-2xl"
                   />
                 </div>
               )}
